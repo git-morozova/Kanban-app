@@ -1,0 +1,40 @@
+{
+  "name": "sf_oopapp",
+  "version": "1.0.0",
+  "description": "Skillfactory educational project. Pure JS web-app  written with OOP.",
+  "main": "app.js",
+  "scripts": {
+    "start": "webpack serve --mode development --open",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ledvanoff/sf_oopapp.git"
+  },
+  "keywords": [
+    "skillfactory",
+    "js",
+    "oop"
+  ],
+  "author": "Oleg Ledvanov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ledvanoff/sf_oopapp/issues"
+  },
+  "homepage": "https://github.com/ledvanoff/sf_oopapp#readme",
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^5.1.2",
+    "html-loader": "^2.1.2",
+    "html-webpack-plugin": "^5.3.1",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.25.0",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.9.1",
+    "bootstrap": "^5.0.0-beta2",
+    "uuid": "^3.4.0"
+  }
+}
