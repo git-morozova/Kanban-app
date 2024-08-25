@@ -1,56 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple TODO App</title>
+    <title>Awesome Kanban Board</title>
+    <link rel="icon" href="images/favicon.ico">
 </head>
 
 <body class="bg-light">
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Awesome Kanban Board</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse hidden" id="navbarSupportedContent">                
-                <div id="app-userName" class="hidden">
-                    Hello, <span id="app-userNameValue"></span>!
-                </div>
-                <form id="app-login-form" class="d-flex">
-                    <input class="form-control me-2" name="login" autocomplete="username" type="text"
-                        placeholder="Login" aria-label="Login">
-                    <input class="form-control me-2" name="password" autocomplete="current-password" type="password"
-                        placeholder="Password" aria-label="Password">
-                    <button id="app-login-btn" class="btn btn-outline-info" type="submit">Sign In</button>
-                </form>
-                <ul id="app-menu" class="navbar-nav me-auto mb-2 mb-lg-0 hidden">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Tasks</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Edit users</a>
-                    </li>
-                    <li class="nav-item">
-                        <a id="app-logout-btn" class="nav-link" aria-current="page" href="#">Log out</a>
-                    </li>
-                </ul>
+    
+    <header>
+        <div class="navbar navbar-expand-lg navbar-dark bg-dark">  
+            <a class="navbar-brand" href="#">
+                Awesome Kanban Board
+            </a>
+            <div id="app-userName" class="ms-auto hidden">
+                Hello, <span id="app-userNameValue"></span>!
+            </div>                
+            <form id="app-login-form" class="ms-auto d-flex">
+                <input class="form-control me-2" name="login" autocomplete="username" type="text" placeholder="Login" aria-label="Login">
+                <input class="form-control me-2" name="password" autocomplete="current-password" type="password" placeholder="Password" aria-label="Password">
+                <button id="app-login-btn" class="btn btn-outline-info" type="submit">Sign In</button>
+            </form>
+            <div id="app-menu" class="ms-auto hidden">
+                <nav id="navbarNavDarkDropdown">
+                    <ul class="navbar-nav d-flex">
+                        <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="nav-avatar" src="./images/avatar.png">
+                            <div id="app-nav-arrow" class="arrow-dwn"></div>
+                        </a>                        
+                        <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">Tasks</a></li>
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Edit users</a></li>
+                            <li><a id="app-logout-btn" class="dropdown-item" href="#">Log out</a></li>
+                        </ul>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
-    </nav>
-    <div class="container">
-        <p id="content">Please Sign In to see your tasks!</p>
-    </div>
+````</header> 
 
+    <main class="container">
+        <p id="content"></p>
+    </main>
 
+    <footer class="footer bg-dark w-100 position-absolute bottom-0 d-flex">
+        <div id="app-footer" class="col d-flex align-items-center hidden">
+            <span class="p-3">Active tasks: <span id="app-activeTasksSum"></span></span>
+            <span class="p-3">Finished tasks: <span id="app-closedTasksSum"></span></span>
+        </div>
+        <div class="col">
+            <span class="p-3 float-end">
+            Kanban board by <span id="app-devName"></span>, <span id="app-devYear"></span>
+            </span>
+        </div>  
+      </footer>
 </body>
-
 </html>

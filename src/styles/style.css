@@ -1,7 +1,6 @@
-#app-login-btn {
-  width: 160px;
+body {
+  font-family: Roboto, arial;
 }
-
 .hidden {
   display: none !important;
 }
@@ -10,16 +9,6 @@
   display: block !important;
 }
 
-#app-userName {
-  padding-top: var(--bs-navbar-brand-padding-y);
-  padding-bottom: var(--bs-navbar-brand-padding-y);
-  margin-right: var(--bs-navbar-brand-margin-end);
-  font-size: var(--bs-navbar-brand-font-size);
-  color: var(--bs-navbar-brand-color);
-  white-space: nowrap;
-}
-
-
 .bg-light {
   background-color: #0079bf !important;
 }
@@ -27,14 +16,80 @@
   background-color: #0067a3 !important;
 }
 
-.navbar-brand {
-font-size: 28px;
-font-family: Roboto, arial;
-padding-top: 0;
-padding-bottom: 0;
+#app-login-btn {
+  width: 160px;
 }
 
-.container, .container-fluid {
-  padding-right: 19px;
-  padding-left: 19px;
+#app-userName {
+  font-size: var(--bs-navbar-brand-font-size);
+  color: var(--bs-navbar-brand-color);
+}
+
+.navbar-brand {
+font-size: 28px;
+}
+
+.navbar {
+  --bs-navbar-padding-x: 1.2rem;
+  --bs-navbar-padding-y: 0rem;
+  min-height: 57px;
+}
+
+footer {
+color: var(--bs-white);
+font-size: 18px;
+}
+
+.nav-avatar {
+  width: 40px;
+  height: 40px;
+  margin-right: 4px;
+}
+
+#app-nav-arrow {
+  display: inline-block;  
+  vertical-align: 0;
+  width: 10px;
+  height: 10px;
+  border: 3px solid #ffffff;
+  border-left: 0;
+  border-top: 10px;
+}
+
+.arrow-dwn {
+  transform: rotate(45deg); 
+}
+
+.arrow-up {
+  transform: rotate(225deg);
+}
+
+.dropdown-menu {
+  --bs-dropdown-link-hover-bg: #0dcaf0;
+  --bs-dropdown-link-hover-color: #ffffff;
+  --bs-dropdown-link-active-bg: #0079bf;
+  --bs-dropdown-border-radius: 5px;
+  right:0;
+  left:auto !important;
+}
+
+/*убираем стрелку bootstrap, которая была "из коробки"*/
+.dropdown-toggle::after {
+  display: none;
+}
+
+@media (max-width: 680px) {
+  .navbar-brand, #app-userName {
+    display: none !important;
+  }
+  .navbar {    
+    background-color: #0079bf !important;
+  }
+  .dropdown-toggle {    
+    text-align: right;
+  }
+  footer { 
+    flex-flow: column;
+    align-items: center;
+  }
 }
