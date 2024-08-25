@@ -12,18 +12,13 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">SimpleTODO</a>
+            <a class="navbar-brand" href="#">Awesome Kanban Board</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                </ul>
+            <div class="collapse navbar-collapse hidden" id="navbarSupportedContent">                
                 <div id="app-userName" class="hidden">
                     Hello, <span id="app-userNameValue"></span>!
                 </div>
@@ -34,7 +29,20 @@
                         placeholder="Password" aria-label="Password">
                     <button id="app-login-btn" class="btn btn-outline-info" type="submit">Sign In</button>
                 </form>
-                <button id="app-signout-btn" class="btn btn-outline-info hidden" type="submit">Sign Out</button>
+                <ul id="app-menu" class="navbar-nav me-auto mb-2 mb-lg-0 hidden">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Tasks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#">Edit users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="app-logout-btn" class="nav-link" aria-current="page" href="#">Log out</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>

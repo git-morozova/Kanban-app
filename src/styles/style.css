@@ -3,11 +3,11 @@
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .visible {
-  display: block;
+  display: block !important;
 }
 
 #app-userName {
@@ -17,4 +17,24 @@
   font-size: var(--bs-navbar-brand-font-size);
   color: var(--bs-navbar-brand-color);
   white-space: nowrap;
+}
+
+
+.bg-light {
+  background-color: #0079bf !important;
+}
+.bg-dark {
+  background-color: #0067a3 !important;
+}
+
+.navbar-brand {
+font-size: 28px;
+font-family: Roboto, arial;
+padding-top: 0;
+padding-bottom: 0;
+}
+
+.container, .container-fluid {
+  padding-right: 19px;
+  padding-left: 19px;
 }

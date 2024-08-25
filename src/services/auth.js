@@ -2,6 +2,7 @@ import { appState } from "../app";
 import { User } from "../models/User";
 import { addToStorage, getFromStorage } from "../utils";
 
+// аутентификация
 export const authUser = function (login, password) {
   const user = new User(login, password);
   if (!user.hasAccess) return false;
@@ -9,15 +10,6 @@ export const authUser = function (login, password) {
   addToStorage(user, "currentUser"); //запишем в local storage текущего пользователя
   return true;
 };
-
-//Проверка аутентификации 
-/*
-if (appState.currentUser){
-  console.log("Вход пользователя: " + appState.currentUser);
-} else {
-  console.log("Нет входа");
-}
-  */
 
 //Проверка аутентификации в local storage
 export const checkStorageAuth = function () {

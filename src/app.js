@@ -4,22 +4,25 @@ import taskFieldTemplate from "./templates/taskField.html";
 import noAccessTemplate from "./templates/noAccess.html";
 import { User } from "./models/User";
 import { Task } from "./models/Task";
-import { generateTestUser } from "./utils";
+import { generateTestUser, removeFromStorage} from "./utils";
 import { State } from "./state";
 import { authUser, checkStorageAuth } from "./services/auth";
-import { hideAuthBlock } from "./services/render";
+import { toggleAuthBlock } from "./services/render";
 
 export const appState = new State();
 
 const loginForm = document.querySelector("#app-login-form");
 
+let mainContent = document.querySelector("#content");
+
 //проверяем, записан ли юзер при открытии страницы в local storage
 //сделано больще для удобства разработки, чтобы не логиниться каждый раз при обновлении страницы
+//на бою можно использовать appState
 if(checkStorageAuth() == true){
-  hideAuthBlock(appState.currentUser);
-  document.querySelector("#content").innerHTML = taskFieldTemplate;
+  toggleAuthBlock(appState.currentUser); //меняем контент в шапке
+  mainContent.innerHTML = taskFieldTemplate;
 } else {
-  document.querySelector("#content").innerHTML = noAccessTemplate;
+  mainContent.innerHTML = noAccessTemplate;
 }
 
 //обработчик кнопки "Sign in"
@@ -33,14 +36,26 @@ loginForm.addEventListener("submit", function (e) {
 
   //проверка логина и пароля
   if(authUser(login, password)) {
-    hideAuthBlock(login); //меняем контент в шапке
-    document.querySelector("#content").innerHTML = taskFieldTemplate; //шаблон основного блока - задачи
+    toggleAuthBlock(login); //меняем контент в шапке
+    mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока - задачи
     console.log("Вход пользователя " + login + ' по Sign in');
   } else {
-    document.querySelector("#content").innerHTML = noAccessTemplate; //шаблон основного блока - нет доступа
+    mainContent.innerHTML = noAccessTemplate; //шаблон основного блока - нет доступа
     console.log("Неверный логин/пароль");
   }
 });
+
+
+//обработчик кнопки "Log Out"
+const logOutButton = document.querySelector('#app-logout-btn');
+
+logOutButton.addEventListener('click', function (event) {
+  event.preventDefault();
+  toggleAuthBlock(); //меняем контент в шапке
+  removeFromStorage("currentUser");
+  mainContent.innerHTML = noAccessTemplate; //шаблон основного блока - нет доступа
+})
+
 
 const test = new Task('Заг', 'текст');
 console.log(test.header);
