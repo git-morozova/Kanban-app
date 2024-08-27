@@ -1,8 +1,32 @@
 body {
   font-family: Roboto, arial;
+  font-size: 18px;
 }
 .hidden {
   display: none !important;
+}
+.alert {
+  position: fixed;
+  background-color: rgba(61, 61, 61, 0.4);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  transition: all 0.3s;
+  margin-bottom: 0;
+  & > div {
+    max-width: 400px;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2em;
+    background: white;
+    box-shadow: var(--bs-box-shadow);
+    border-radius:10px;
+  }  
 }
 
 .visible {
@@ -15,6 +39,11 @@ body {
 .bg-dark {
   background-color: #0067a3 !important;
 }
+
+h1 {
+  color:white;
+}
+
 
 #app-login-btn {
   width: 160px;
@@ -34,6 +63,36 @@ font-size: 28px;
   --bs-navbar-padding-y: 0rem;
   min-height: 57px;
 }
+
+main {  
+  margin: 20px;
+
+}
+.tasks { 
+  gap:24px
+}
+.tasks-col { 
+background-color: #EBECF0;
+border-radius:10px
+}
+
+.tasks-col__add {
+color: #5E6C84;
+border:0;
+padding:0;
+background-color: #EBECF0;
+}
+
+.tasks-col__add_plus { 
+  font-size: 28px;
+  font-weight: 350;
+  line-height: 23px;
+  padding-right: 5px;
+  }
+   .tasks-col__add:hover  { 
+    color: #0079bf;
+      }
+
 
 footer {
 color: var(--bs-white);
@@ -64,6 +123,12 @@ font-size: 18px;
   transform: rotate(225deg);
 }
 
+.img-door{
+  width: 200px;
+  height: auto;
+  padding-right:20px
+}
+
 .dropdown-menu {
   --bs-dropdown-link-hover-bg: #0dcaf0;
   --bs-dropdown-link-hover-color: #ffffff;
@@ -71,15 +136,84 @@ font-size: 18px;
   --bs-dropdown-border-radius: 5px;
   right:0;
   left:auto !important;
+  border: 0;
+    top: 50px !important;
 }
 
-/*убираем стрелку bootstrap, которая была "из коробки"*/
+/*стрелка для всплывающего блока меню*/
+#app-nav-arrow-cloud {
+  content: '';
+  position: absolute;
+  top: 52px;
+  left: 37%;
+  width: 0;
+  height: 0;
+  border: 13px solid transparent;
+  border-bottom-color: #ffffff;
+  border-top: 0;
+  margin-left: -13px;
+  margin-top: -11px;
+}
+
+/*убираем стрелку bootstrap "из коробки", справа от аватарки*/
 .dropdown-toggle::after {
   display: none;
 }
 
+.tasks-col__item  {
+border-radius:5px;
+padding: 5px 10px 5px 8px;
+margin-bottom: 8px;
+cursor:pointer;
+text-decoration: none;
+color: var(--bs-navbar-brand-color);
+border: 2px solid transparent;
+}
+
+.tasks-col__item:hover  { 
+border: 2px solid #0dcaf0;
+  }
+  #sign-in {
+    margin-top:50px
+  }
+ #navbarNavDarkDropdown  {
+    position: sticky;
+}
+
+/*адаптив*/
+
+@media (min-width: 681px) and (max-width: 1000px) {
+  .footer-dev-info {
+    display: none !important;
+  }
+  .navbar-expand-lg {    
+    flex-flow: column;
+  }
+  .ms-auto {
+    margin-left: inherit !important;
+  } 
+  .navbar {
+    min-height: 130px;
+    justify-content: space-evenly;
+  }
+  .tasks {    
+  flex-direction: column;
+  }
+  .dropdown-menu {
+    position: absolute; 
+  }  
+  footer { 
+    flex-flow: column;
+    align-items: center;
+    justify-content: space-evenly;
+  } 
+  .p-3 {
+    padding: 0.2rem 2rem !important;
+}
+}
+
 @media (max-width: 680px) {
-  .navbar-brand, #app-userName {
+  .navbar-brand, #app-userName,  #app-footer, .footer-dev-info {
     display: none !important;
   }
   .navbar {    
@@ -88,8 +222,14 @@ font-size: 18px;
   .dropdown-toggle {    
     text-align: right;
   }
-  footer { 
-    flex-flow: column;
-    align-items: center;
+  .tasks {    
+  flex-direction: column;
+  }  
+  #sign-in {
+    flex-direction: column;
+    text-align: center;
   }
 }
+
+/*END адаптив*/
+

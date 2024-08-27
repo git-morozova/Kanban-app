@@ -17,47 +17,54 @@
             </a>
             <div id="app-userName" class="ms-auto hidden">
                 Hello, <span id="app-userNameValue"></span>!
-            </div>                
+            </div>       
+            <!--блок аутентификации-->         
             <form id="app-login-form" class="ms-auto d-flex">
                 <input class="form-control me-2" name="login" autocomplete="username" type="text" placeholder="Login" aria-label="Login">
                 <input class="form-control me-2" name="password" autocomplete="current-password" type="password" placeholder="Password" aria-label="Password">
-                <button id="app-login-btn" class="btn btn-outline-info" type="submit">Sign In</button>
+                <button id="app-login-btn" class="btn btn-outline-info" type="submit">Sign&nbsp;In</button>
             </form>
+            <!--END блок аутентификации-->  
+            <!--блок выпадающего меню-->  
             <div id="app-menu" class="ms-auto hidden">
                 <nav id="navbarNavDarkDropdown">
-                    <ul class="navbar-nav d-flex">
-                        <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img class="nav-avatar" src="./images/avatar.png">
-                            <div id="app-nav-arrow" class="arrow-dwn"></div>
-                        </a>                        
-                        <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">Tasks</a></li>
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li><a class="dropdown-item" href="#">Edit users</a></li>
-                            <li><a id="app-logout-btn" class="dropdown-item" href="#">Log out</a></li>
-                        </ul>
-                        </li>
-                    </ul>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img class="nav-avatar" src="./images/avatar.png">
+                        <div id="app-nav-arrow" class="arrow-dwn"></div>
+                    </a>    
+                    <div id="app-nav-arrow-cloud" class="hidden"></div>                    
+                    <ul id="app-menu-cloud" class="dropdown-menu dropdown-menu-light shadow" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Tasks</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Edit&nbsp;users</a></li>
+                        <li><a id="app-logout-btn" class="dropdown-item" href="#">Log&nbsp;out</a></li>
+                    </ul>                        
                 </nav>
-            </div>
+            </div> 
+            <!--END блок выпадающего меню--> 
         </div>
-````</header> 
+    </header> 
 
-    <main class="container">
-        <p id="content"></p>
+    <!--блок основного контента-->
+    <main>
+        <div id="content"></div>
     </main>
+    <!--END блок основного контента-->
 
     <footer class="footer bg-dark w-100 position-absolute bottom-0 d-flex">
+        <!--инфо о тасках-->
         <div id="app-footer" class="col d-flex align-items-center hidden">
             <span class="p-3">Active tasks: <span id="app-activeTasksSum"></span></span>
             <span class="p-3">Finished tasks: <span id="app-closedTasksSum"></span></span>
         </div>
-        <div class="col">
+        <!--END инфо о тасках-->
+        <!--автор, год разработки-->
+        <div class="col footer-dev-info">
             <span class="p-3 float-end">
             Kanban board by <span id="app-devName"></span>, <span id="app-devYear"></span>
             </span>
-        </div>  
+        </div> 
+        <!--END автор, год разработки--> 
       </footer>
 </body>
 </html>

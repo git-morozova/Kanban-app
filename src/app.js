@@ -2,32 +2,27 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/bootstrap.bundle.min.js";
 import "./styles/style.css";
 import taskFieldTemplate from "./templates/taskField.html";
-import noAccessTemplate from "./templates/noAccess.html";
 import pleaseSignInTemplate from "./templates/pleaseSignIn.html";
+import noAccessTemplate from "./templates/noAccess.html";
 
 import { User } from "./models/User";
 import { Task } from "./models/Task";
-import { generateTestUser, removeFromStorage} from "./utils";
+import { generateTestUser, generateTestTasks, addToStorage} from "./utils";
 import { State } from "./state";
 import { authUser, checkStorageAuth } from "./services/auth";
-import { toggleAuthBlock, toggleFooter, navArrowToggle } from "./services/render";
-import { DEVNAME, DEVYEAR } from "./globals";
+import { toggleAuthBlock, toggleFooter, navArrowShow, navArrowHide, showAlert, hideAlert } from "./services/render";
+import { showUserTasks } from "./services/tasks";
 
 export const appState = new State();
 const loginForm = document.querySelector("#app-login-form");
 let mainContent = document.querySelector("#content");
 
-//запись констант в футер
-document.querySelector('#app-devName').innerHTML = DEVNAME;
-document.querySelector('#app-devYear').innerHTML = DEVYEAR;
-
-//проверяем, записан ли юзер при открытии страницы в local storage
-//сделано больще для удобства разработки, чтобы не логиниться каждый раз при обновлении страницы
-//на бою можно использовать appState
+//при обращении к странице проверяем, записан ли currentUser в local storage
 if(checkStorageAuth() == true){
   toggleAuthBlock(appState.currentUser); //меняем контент в шапке
   toggleFooter(); //меняем контент в подвале
   mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока: задачи
+  showUserTasks(appState.currentUser) //рендер всех тасков юзера на доске
 } else {
   mainContent.innerHTML = pleaseSignInTemplate; //шаблон основного блока: пожалуйста, залогиньтесь
 }
@@ -36,6 +31,7 @@ if(checkStorageAuth() == true){
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
   generateTestUser(User);
+  generateTestTasks(Task);
 
   const formData = new FormData(loginForm);
   const login = formData.get("login");
@@ -43,16 +39,19 @@ loginForm.addEventListener("submit", function (e) {
 
   //проверка логина и пароля
   if(authUser(login, password)) {
+    addToStorage(login, "currentUser"); //запишем в local storage текущего пользователя
     toggleAuthBlock(login); //меняем контент в шапке
     toggleFooter(); //меняем контент в подвале
-    mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока: задачи
     console.log("Вход пользователя " + login + ' по Sign in');
+    mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока: задачи
+    showUserTasks(login) //рендер всех тасков юзера на доске
+
   } else {
-    mainContent.innerHTML = noAccessTemplate; //шаблон основного блока: нет доступа
+    mainContent.innerHTML += noAccessTemplate; //шаблон алерта
+    showAlert("Sorry, you've no access to this resource!");
     console.log("Неверный логин/пароль");
   }
 });
-
 
 //обработчик кнопки "Log Out"
 const logOutButton = document.querySelector('#app-logout-btn');
@@ -61,16 +60,21 @@ logOutButton.addEventListener('click', function (event) {
   event.preventDefault();
   toggleAuthBlock(); //меняем контент в шапке
   toggleFooter(); //меняем контент в подвале
-  removeFromStorage("currentUser");
-  mainContent.innerHTML = pleaseSignInTemplate; //шаблон основного блока: пожалуйста, залогиньтесь
+  localStorage.clear();
+  mainContent.innerHTML = pleaseSignInTemplate; //шаблон основного блока: пожалуйста, залогиньтесь  
 })
 
-//обработчик стрелки верхнего выпадающего меню, используем id из bootstrap
-document.querySelector("#navbarDarkDropdownMenuLink").addEventListener("click", function (event) {
-  event.preventDefault();
-  navArrowToggle();
+//обработчик верхнего выпадающего меню
+//используем window, т.к. юзер может кликнуть в любом месте, чтобы закрыть меню
+//проверяем, какие стрелки нужно отобразить, через список пунктов меню из bootstrap
+window.addEventListener("click", function () {
+  document.querySelector("#app-menu-cloud").classList.contains("show")
+  ? navArrowShow() //меню показывается, значит стрелка справа от аватара - вверх, а белый треугольник для облака меню нужен 
+  : navArrowHide() //стрелка аватара вниз, треугольник для облака не нужен
 })
 
-const test = new Task('Заг', 'текст');
-console.log(test.header);
-console.log(test.text);
+//обработчик алерта
+//опять нужен из-за того, что юзер может кликнуть в любом месте, чтобы закрыть всплывающее окно
+window.addEventListener("click", function () {
+  document.querySelector("#app-alert") != null ? hideAlert() : false
+})

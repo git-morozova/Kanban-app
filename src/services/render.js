@@ -1,3 +1,8 @@
+import { DEVNAME, DEVYEAR } from "../globals";
+
+//запись констант в футер
+document.querySelector('#app-devName').innerHTML = DEVNAME;
+document.querySelector('#app-devYear').innerHTML = DEVYEAR;
 
 //Замена блока аутентификации на блок с приветствием (в шапке)
 const loginForm = document.querySelector("#app-login-form");
@@ -13,8 +18,23 @@ export const toggleFooter = function () {
   document.querySelector("#app-footer").classList.toggle('hidden')
 }
 
-//изменение стрелки в выпадающем верхнем меню при клике
-export const navArrowToggle = function () {
-  document.querySelector("#app-nav-arrow").classList.toggle('arrow-dwn');
-  document.querySelector("#app-nav-arrow").classList.toggle('arrow-up');
+//отображение и скрытие выпадающего меню справа вверху, включая стрелки
+//toggle нельзя использовать, так как нужно обработать событие клика в любом месте страницы
+export const navArrowShow = function () {
+  document.querySelector("#app-nav-arrow").classList.remove('arrow-dwn');
+  document.querySelector("#app-nav-arrow").classList.add('arrow-up');
+  document.querySelector("#app-nav-arrow-cloud").classList.remove('hidden');
+}
+export const navArrowHide = function () {
+  document.querySelector("#app-nav-arrow").classList.remove('arrow-up');
+  document.querySelector("#app-nav-arrow").classList.add('arrow-dwn');
+  document.querySelector("#app-nav-arrow-cloud").classList.add('hidden');
+}
+
+//Алерт при введении неверного логина/пароля
+export const showAlert = function (e) {
+  document.querySelector("#app-alert-text").innerHTML = e;
+}
+export const hideAlert = function () {
+  document.querySelector('#app-alert').remove()
 }
