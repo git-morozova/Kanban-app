@@ -1,4 +1,5 @@
 import { DEVNAME, DEVYEAR } from "../globals";
+import { getFromStorage } from "../utils";
 
 //запись констант в футер
 document.querySelector('#app-devName').innerHTML = DEVNAME;
@@ -37,4 +38,24 @@ export const showAlert = function (e) {
 }
 export const hideAlert = function () {
   document.querySelector('#app-alert').remove()
+}
+
+//функция записи в футер кол-ва тасков
+export const tasksSum = function () {
+  let activeTasksSum = 0;
+  let closedTasksSum = 0;
+  let storageData = getFromStorage("tasks");
+
+  //выбираем таски backlog и finished
+  for (let i = 0; i < storageData.length; i++) {
+      if (storageData[i].step == "backlog") {
+        activeTasksSum = activeTasksSum + 1;
+      }        
+      if (storageData[i].step == "finished") {
+        closedTasksSum = closedTasksSum + 1;
+      }      
+  }
+  //рендер
+  document.querySelector('#app-activeTasksSum').innerHTML = activeTasksSum;
+  document.querySelector('#app-closedTasksSum').innerHTML = closedTasksSum;
 }

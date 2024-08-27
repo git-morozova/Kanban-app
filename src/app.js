@@ -10,7 +10,7 @@ import { Task } from "./models/Task";
 import { generateTestUser, generateTestTasks, addToStorage} from "./utils";
 import { State } from "./state";
 import { authUser, checkStorageAuth } from "./services/auth";
-import { toggleAuthBlock, toggleFooter, navArrowShow, navArrowHide, showAlert, hideAlert } from "./services/render";
+import { toggleAuthBlock, toggleFooter, navArrowShow, navArrowHide, showAlert, hideAlert, tasksSum } from "./services/render";
 import { showUserTasks } from "./services/tasks";
 
 export const appState = new State();
@@ -23,6 +23,7 @@ if(checkStorageAuth() == true){
   toggleFooter(); //меняем контент в подвале
   mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока: задачи
   showUserTasks(appState.currentUser) //рендер всех тасков юзера на доске
+  tasksSum() //пишем в футер кол-во тасков
 } else {
   mainContent.innerHTML = pleaseSignInTemplate; //шаблон основного блока: пожалуйста, залогиньтесь
 }
@@ -45,6 +46,7 @@ loginForm.addEventListener("submit", function (e) {
     console.log("Вход пользователя " + login + ' по Sign in');
     mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока: задачи
     showUserTasks(login) //рендер всех тасков юзера на доске
+    tasksSum() //пишем в футер кол-во тасков
 
   } else {
     mainContent.innerHTML += noAccessTemplate; //шаблон алерта
