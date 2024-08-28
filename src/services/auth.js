@@ -7,7 +7,7 @@ export const authUser = function (login, password) {
   const user = new User(login, password);
   if (!user.hasAccess) return false;
   appState.currentUser = user;
-  filterStorageTasks(login)
+  filterStorageTasks(login);
   return true;
 };
 

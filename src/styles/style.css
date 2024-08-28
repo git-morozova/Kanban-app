@@ -1,4 +1,4 @@
-body {
+  body {
   font-family: Roboto, arial;
   font-size: 18px;    
 }
@@ -25,6 +25,36 @@ body {
   cursor: pointer;
 }
 /* END scrollbar */
+
+.disabled {
+ cursor:default
+}
+
+.btn-primary {
+  --bs-btn-bg: #0079BF;
+  --bs-btn-border-color: #0079BF;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #0067a3;
+  --bs-btn-hover-border-color: #0067a3;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #0079BF;
+  --bs-btn-active-border-color: #0079BF;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #0079BF;
+  --bs-btn-disabled-border-color: #0079BF;
+}
+#app-backlog-submit {
+  max-width: 102px;
+  --bs-btn-font-size: 18px;
+  --bs-btn-padding-y: 0.175rem;
+  margin-top:12px
+}
+
+.buttons {
+  padding-right: 12px;
+}
 
 .hidden {
   display: none !important;
@@ -67,6 +97,9 @@ body {
 h1 {
   color:white;
 }
+.tasks-col__item {
+  margin-bottom:15px;
+}
 
 .tasks-col__item-badge{
   background-color:rgba(255, 255, 255, 0.7);
@@ -96,7 +129,11 @@ h1 {
   right:100%;
   top:0px;
 }
-
+.items {
+  padding-right: 12px;
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+}
 
 .tasks-col__item-badge:hover {
   color: #0079bf;  
@@ -132,8 +169,7 @@ main {
 .tasks-col { 
 background-color: #EBECF0;
 border-radius:10px;
-max-height: calc(100vh - 159px);
-  overflow-y: auto;
+padding-right: 0;
 }
 
 .tasks-col__add {
@@ -149,7 +185,7 @@ background-color: #EBECF0;
   line-height: 23px;
   padding-right: 5px;
   }
-   .tasks-col__add:hover  { 
+   .tasks-col__add:hover:enabled  { 
     color: #0079bf;
       }
 
@@ -190,8 +226,8 @@ font-size: 18px;
 }
 
 .dropdown-menu {
-  --bs-dropdown-link-hover-bg: #0dcaf0;
-  --bs-dropdown-link-hover-color: #ffffff;
+  --bs-dropdown-link-hover-bg: #deeef7;
+  --bs-dropdown-link-hover-color: #0079bf;
   --bs-dropdown-link-active-bg: #0079bf;
   --bs-dropdown-border-radius: 5px;
   right:0;
@@ -233,7 +269,8 @@ display: block;
 }
 
 .tasks-col__item-task:hover  { 
-border: 2px solid #0079bf;
+border:2px solid #0079bf;
+background-color: #deeef7 !important;
   }
   #sign-in {
     margin-top:50px

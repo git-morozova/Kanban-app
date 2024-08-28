@@ -7,7 +7,7 @@ import noAccessTemplate from "./templates/noAccess.html";
 
 import { User } from "./models/User";
 import { Task } from "./models/Task";
-import { generateTestUser, generateTestTasks, addToStorage} from "./utils";
+import { generateTestUser, generateTestTasks, addToStorage } from "./utils";
 import { State } from "./state";
 import { authUser, checkStorageAuth } from "./services/auth";
 import { toggleAuthBlock, toggleFooter, navArrowShow, navArrowHide, showAlert, hideAlert, tasksSum } from "./services/render";
@@ -31,6 +31,7 @@ if(checkStorageAuth() == true){
 //обработчик кнопки "Sign in"
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
+  localStorage.clear();
   generateTestUser(User);
   generateTestTasks(Task);
 

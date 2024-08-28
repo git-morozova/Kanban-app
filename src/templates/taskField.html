@@ -1,13 +1,19 @@
 <div class="row mx-auto tasks">
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">Backlog</div>
-        <button id="app-backlog" class="tasks-col__add d-flex">
-                <div class="tasks-col__add_plus">+</div> 
-                <div class="tasks-col__add_text">Add card</div>
-        </button>
+        <div id="app-backlog-items" class="items"></div>
+        <div class="buttons">
+            <button id="app-backlog" class="tasks-col__add d-flex">
+                    <div class="tasks-col__add_plus">+</div> 
+                    <div class="tasks-col__add_text">Add card</div>
+            </button>
+            <input id="app-backlog-input" type="text" class="form-control hidden">
+        <button id="app-backlog-submit" class="btn btn-primary hidden">Submit</button>
+    </div>
     </div>
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">Ready</div>
+        <div id="app-ready-items" class="items"></div>
         <button id="app-ready" class="tasks-col__add d-flex">
                 <div class="tasks-col__add_plus">+</div> 
                 <div class="tasks-col__add_text">Add card</div>
@@ -15,6 +21,7 @@
     </div>
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">In progress</div>
+        <div id="app-inprogress-items" class="items"></div>
         <button id="app-inprogress" class="tasks-col__add d-flex">
                 <div class="tasks-col__add_plus">+</div> 
                 <div class="tasks-col__add_text">Add card</div>
@@ -22,6 +29,7 @@
     </div>
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">Finished</div>
+        <div id="app-finished-items" class="items"></div>
         <button id="app-finished" class="tasks-col__add d-flex">
                 <div class="tasks-col__add_plus">+</div> 
                 <div class="tasks-col__add_text">Add card</div>

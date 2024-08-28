@@ -59,3 +59,21 @@ export const tasksSum = function () {
   document.querySelector('#app-activeTasksSum').innerHTML = activeTasksSum;
   document.querySelector('#app-closedTasksSum').innerHTML = closedTasksSum;
 }
+
+//функция делает disabled для ненужных addCard
+export const disabledActivator = function () {
+  let storageData = getFromStorage("tasks");
+  let ready = document.querySelector('#app-ready');
+  let inprogress = document.querySelector('#app-inprogress');
+  let finished = document.querySelector('#app-finished');
+  
+  //обнуляем
+  ready.disabled = true;
+  inprogress.disabled = true;
+  finished.disabled = true;
+
+  //проверяем, есть ли таски в каждом step
+  storageData.some(e => e.step === 'backlog') ? ready.disabled = false : false;
+  storageData.some(e => e.step === 'ready') ? inprogress.disabled = false : false;
+  storageData.some(e => e.step === 'inprogress') ? finished.disabled = false : false;  
+}
