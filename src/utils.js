@@ -1,3 +1,4 @@
+/* local storage */ 
 export const getFromStorage = function (key) {
   return JSON.parse(localStorage.getItem(key) || "[]");
 };
@@ -11,6 +12,34 @@ export const addToStorage = function (obj, key) {
 export const removeFromStorage = function (key) {
   localStorage.removeItem(key);
 };
+
+export const changeStorage = function (obj, key) {
+  let tempStorageData = getFromStorage(key); //создаем экземпляр
+  removeFromStorage(key);
+
+  for (let i = 0; i < tempStorageData.length; i++) {
+    if(tempStorageData[i].id !== obj.id){
+      addToStorage(tempStorageData[i], key);
+    }
+  };
+  addToStorage(obj, key);
+};
+
+//функция убирает таски из local storage, которые не относятся к текущему пользователю
+export const filterStorageTasks = function (login) {
+  if (login !== "admin") {
+    let storageData = getFromStorage("tasks");
+    removeFromStorage("tasks");
+    
+    storageData = storageData.filter(function (elem) {
+      if (elem.login == login) {
+        addToStorage(elem, "tasks")
+      }
+    })    
+  }
+  return true
+};
+/* END local storage */
 
 export const generateTestUser = function (User) {
   const testUser = new User("test_user", "123");
@@ -41,18 +70,3 @@ export const generateTestTasks = function (Task) {
   Task.save(testTask5);
   Task.save(testTask6);
 }; 
-
-//функция убирает таски из local storage, которые не относятся к текущему пользователю
-export const filterStorageTasks = function (login) {
-  if (login !== "admin") {
-    let storageData = getFromStorage("tasks");
-    removeFromStorage("tasks");
-    
-    storageData = storageData.filter(function (elem) {
-      if (elem.login == login) {
-        addToStorage(elem, "tasks")
-      }
-    })    
-  }
-  return true
-};

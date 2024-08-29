@@ -17,5 +17,5 @@ export class Task extends BaseModel {
         } catch (e) {
           throw new Error(e);
         }
-      }
+    }
 }

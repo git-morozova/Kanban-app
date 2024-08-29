@@ -3,6 +3,95 @@
   font-size: 18px;    
 }
 
+
+/* select */
+.select-box {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  width: 100%;   
+  font-size: 16px;
+  line-height: 20px;    
+  z-index: 999;
+}
+
+.select-box__current {
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  background-color: white;
+  border-radius:5px;  
+}
+.select-box__current:focus + .select-box__list {
+  opacity: 1;
+  animation-name: none;
+}
+.select-box__current:focus + .select-box__list .select-box__option {
+  cursor: pointer;
+}
+.select-box__icon {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 13px;
+  opacity: 0.3;
+  z-index: 999;
+}
+.select-box__value {
+  display: flex;
+  padding-right: 30px;
+}
+.select-box__input {
+  display: none;
+}
+.select-box__input:checked + .select-box__input-text {
+  display: block;
+}
+.select-box__input-text {
+  display: none;
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  background-color: #fff;
+  border-radius:5px;  
+}
+.select-box__list {
+  position: absolute;
+  width: 100%;
+  padding: 0;
+  list-style: none;
+  opacity: 0;
+  animation-name: HideList;
+  animation-duration: 0.5s;
+  animation-delay: 0.5s;
+  animation-fill-mode: forwards;
+  animation-timing-function: step-start;
+  box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius:5px;  
+}
+.select-box__option {
+  display: block;
+  padding: 15px;
+}
+.select-box__option:hover, .select-box__option:focus {
+  color: #0079BF;
+  background-color: #deeef7;
+  border-radius:5px;  
+}
+@keyframes HideList {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0);
+  }
+}
+/* END select */
+
+
+
 /* scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
@@ -31,6 +120,11 @@
 }
 
 .btn-primary {
+  max-width: 102px;
+  --bs-btn-font-size: 18px;
+  --bs-btn-padding-y: 0.175rem;
+  margin-top:12px;
+
   --bs-btn-bg: #0079BF;
   --bs-btn-border-color: #0079BF;
   --bs-btn-hover-color: #fff;
@@ -45,15 +139,10 @@
   --bs-btn-disabled-bg: #0079BF;
   --bs-btn-disabled-border-color: #0079BF;
 }
-#app-backlog-submit {
-  max-width: 102px;
-  --bs-btn-font-size: 18px;
-  --bs-btn-padding-y: 0.175rem;
-  margin-top:12px
-}
 
 .buttons {
   padding-right: 12px;
+  position: relative;
 }
 
 .hidden {
@@ -201,6 +290,13 @@ font-size: 18px;
   margin-right: 4px;
 }
 
+
+
+
+
+
+
+
 #app-nav-arrow {
   display: inline-block;  
   vertical-align: 0;
@@ -225,12 +321,16 @@ font-size: 18px;
   padding-right:20px
 }
 
-.dropdown-menu {
+.dropdown {
   --bs-dropdown-link-hover-bg: #deeef7;
   --bs-dropdown-link-hover-color: #0079bf;
   --bs-dropdown-link-active-bg: #0079bf;
   --bs-dropdown-border-radius: 5px;
-  right:0;
+  width: auto;
+}
+
+.menu {
+   right:0;
   left:auto !important;
   border: 0;
     top: 50px !important;
@@ -282,7 +382,7 @@ background-color: #deeef7 !important;
 
 /*адаптив*/
 @media (min-width: 681px) and (max-width: 1000px) {
-  .footer-dev-info,  #app-footer {
+  .footer-dev-info {
     display: none !important;
   }
   .navbar-expand-lg {    

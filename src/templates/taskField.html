@@ -1,4 +1,6 @@
 <div class="row mx-auto tasks">
+
+    <!-- Backlog -->
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">Backlog</div>
         <div id="app-backlog-items" class="items"></div>
@@ -9,16 +11,34 @@
             </button>
             <input id="app-backlog-input" type="text" class="form-control hidden">
         <button id="app-backlog-submit" class="btn btn-primary hidden">Submit</button>
-    </div>
-    </div>
+        </div>
+    </div>   
+
+    <!-- Ready --> 
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">Ready</div>
         <div id="app-ready-items" class="items"></div>
-        <button id="app-ready" class="tasks-col__add d-flex">
+        <div class="buttons">
+            <button id="app-ready" class="tasks-col__add d-flex">
                 <div class="tasks-col__add_plus">+</div> 
                 <div class="tasks-col__add_text">Add card</div>
-        </button>
+            </button>            
+            <div id="app-select-box" class="select-box hidden">
+                <img class="select-box__icon" src="../images/arrow.svg" aria-hidden="true">
+                <div id="app-list-inputs" class="select-box__current" tabindex="1">        
+                    <div class="select-box__value">
+                        <input class="select-box__input" type="radio" id="0" name="ready" checked="checked">
+                        <p class="select-box__input-text">&nbsp;</p>
+                    </div>       
+                </div>
+                <ul id="app-list-labels" class="select-box__list shadow">  
+                </ul>
+            </div>                 
+        <button id="app-ready-submit" class="btn btn-primary hidden">Submit</button>
+        </div>        
     </div>
+
+    <!-- In progress -->
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">In progress</div>
         <div id="app-inprogress-items" class="items"></div>
@@ -27,6 +47,8 @@
                 <div class="tasks-col__add_text">Add card</div>
         </button>
     </div>
+
+    <!-- Finished -->
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">Finished</div>
         <div id="app-finished-items" class="items"></div>
@@ -35,4 +57,5 @@
                 <div class="tasks-col__add_text">Add card</div>
         </button>
     </div>
+    
 </div>    

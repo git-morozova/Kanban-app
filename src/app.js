@@ -3,7 +3,7 @@ import "./styles/bootstrap.bundle.min.js";
 import "./styles/style.css";
 import taskFieldTemplate from "./templates/taskField.html";
 import pleaseSignInTemplate from "./templates/pleaseSignIn.html";
-import noAccessTemplate from "./templates/noAccess.html";
+import alertTemplate from "./templates/alert.html";
 
 import { User } from "./models/User";
 import { Task } from "./models/Task";
@@ -22,8 +22,8 @@ if(checkStorageAuth() == true){
   toggleAuthBlock(appState.currentUser); //меняем контент в шапке
   toggleFooter(); //меняем контент в подвале
   mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока: задачи
-  showUserTasks(appState.currentUser) //рендер всех тасков юзера на доске
-  tasksSum() //пишем в футер кол-во тасков
+  showUserTasks(appState.currentUser); //рендер всех тасков юзера на доске
+  tasksSum(); //пишем в футер кол-во тасков
 } else {
   mainContent.innerHTML = pleaseSignInTemplate; //шаблон основного блока: пожалуйста, залогиньтесь
 }
@@ -46,11 +46,11 @@ loginForm.addEventListener("submit", function (e) {
     toggleFooter(); //меняем контент в подвале
     console.log("Вход пользователя " + login + ' по Sign in');
     mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока: задачи
-    showUserTasks(login) //рендер всех тасков юзера на доске
-    tasksSum() //пишем в футер кол-во тасков
+    showUserTasks(login); //рендер всех тасков юзера на доске
+    tasksSum(); //пишем в футер кол-во тасков
 
   } else {
-    mainContent.innerHTML += noAccessTemplate; //шаблон алерта
+    mainContent.innerHTML += alertTemplate; //шаблон алерта
     showAlert("Sorry, you've no access to this resource!");
     console.log("Неверный логин/пароль");
   }

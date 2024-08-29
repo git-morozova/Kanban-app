@@ -5,6 +5,12 @@ import { getFromStorage } from "../utils";
 document.querySelector('#app-devName').innerHTML = DEVNAME;
 document.querySelector('#app-devYear').innerHTML = DEVYEAR;
 
+//меняет класс элемента с hidden на visible и обратно
+export const elementToggle = function (selector) {
+  let element = document.querySelector(selector);
+  element.classList.toggle('hidden');
+};
+
 //Замена блока аутентификации на блок с приветствием (в шапке)
 const loginForm = document.querySelector("#app-login-form");
 export const toggleAuthBlock = function (login) {
@@ -32,7 +38,7 @@ export const navArrowHide = function () {
   document.querySelector("#app-nav-arrow-cloud").classList.add('hidden');
 }
 
-//Алерт при введении неверного логина/пароля
+//Алерт при введении неверного логина/пароля, при введении уже существующего хедера для новой таски
 export const showAlert = function (e) {
   document.querySelector("#app-alert-text").innerHTML = e;
 }
