@@ -2,46 +2,45 @@ import { getFromStorage, changeStorage } from "../utils";
 import { Task } from "../models/Task";
 import { disabledActivator, tasksSum, showAlert, elementToggle } from "../services/render";
 import alertTemplate from "../templates/alert.html";
-//обращение к local storage - отдельно для каждой функции, иначе все ломается
+
+let storageData = getFromStorage("tasks");
 
 //вспомогательная функция - рендер одного таска
-const renderTask = function (currentStep, user, login, header) {
+const renderTask = function (id) {
+  let task = storageData.filter(e => e.id === id)[0];
+
   let a = document.createElement('a');
-  let storageData = getFromStorage("tasks");
-  let id = storageData.filter(e => e.header === header)[0].id;
+  a.className = "tasks-col__item-task bg-white";
+  a.textContent = task.header;
 
-    a.className = "tasks-col__item-task bg-white";
-    a.textContent = header;
+  let div = document.createElement('div');
+  div.className = "tasks-col__item";
+  div.id = 'id-' + `${id}`;
 
-    let div = document.createElement('div');
-    div.className = "tasks-col__item";
-    div.id = 'id-' + `${id}`;
+  let node = document.querySelector('#app-' + `${task.step}` + '-items');
+  node.insertAdjacentElement('beforeend', div); 
+  div.insertAdjacentElement('afterbegin', a);
 
-    let node = document.querySelector('#app-' + `${currentStep}` + '-items');
-    node.insertAdjacentElement('beforeend', div); 
-    div.insertAdjacentElement('afterbegin', a);
+  //обычный пользователь видит только заголовки тасков
+  //админу также показываем, какой пользователь прикреплен к каждому таску 
+  if (getFromStorage("currentUser") == "admin"){
+    let userBadge = document.createElement('a');
 
-    //обычный пользователь видит только заголовки тасков
-    //админу также показываем, какой пользователь прикреплен к каждому таску 
-    if (user == "admin"){
-      let userBadge = document.createElement('a');
-
-      userBadge.className = "tasks-col__item-badge shape";
-      userBadge.textContent = login;
-      div.insertAdjacentElement('afterbegin', userBadge);
-    }
+    userBadge.className = "tasks-col__item-badge shape";
+    userBadge.textContent = task.login;
+    div.insertAdjacentElement('afterbegin', userBadge);
+  }
 }
 
 //вспомогательная функция - меняет step для таски
 const changeStep = function (header, step) {
-  let storageData = getFromStorage("tasks");
   let tempTask = storageData.filter(e => e.header === header)[0];
   tempTask.step = step;
 
-  changeStorage (tempTask,"tasks");
+  changeStorage (tempTask, "tasks");
   deleteTask(tempTask.id);
 
-  renderTask(step, tempTask.user, tempTask.login, header);
+  renderTask(tempTask.id);
   disabledActivator();
   tasksSum();
 }
@@ -55,14 +54,14 @@ const deleteTask = function (id) {
 //рендер всех тасков (4 колонки)
 //заполняем колонки снизу вверх, чтобы сохранить порядок: сверху старые таски
 export const showUserTasks = function (user) {
-  let storageData = getFromStorage("tasks");
+  storageData = getFromStorage("tasks"); //обновим, иначе вывалится storage предыдущей сессии
 
   const renderTasks = (currentStep) => {
     document.querySelector('#app-' + `${currentStep}` + '-items').innerHTML = ''; //очистка доски
 
     for (let i = 0; i < storageData.length; i++) {
       if (storageData[i].step == currentStep) {
-        renderTask(currentStep, user, storageData[i].login, storageData[i].header);
+        renderTask(storageData[i].id);
       }
     };
   }
@@ -71,17 +70,17 @@ export const showUserTasks = function (user) {
   renderTasks('inprogress');
   renderTasks('finished');
 
-  addCardActivator(user);
+  //добавляем функции кнопок только после того, как они появятся в DOM
+  backlogActivator(user);
+  readyActivator();
   disabledActivator();
 }
 
-//добавляем функции кнопок только после того, как они появятся в DOM
-const addCardActivator = function (user) {
-  let addBacklogBtn = document.querySelector('#app-backlog');
-  let addReadyBtn = document.querySelector('#app-ready');
+//клик по кнопке addCard в колонке backlog
+const backlogActivator = function (user) {
+  let addBtn = document.querySelector('#app-backlog');
 
-  //клик по кнопке addCard в колонке backlog
-  addBacklogBtn.addEventListener('click', function (event) {
+  addBtn.addEventListener('click', function (event) {
     event.preventDefault();
     elementToggle("#app-backlog");
     elementToggle("#app-backlog-submit");
@@ -101,39 +100,41 @@ const addCardActivator = function (user) {
       elementToggle("#app-backlog-submit");      
       elementToggle("#app-backlog-input");
 
-      if (input.value) {
-        let storageData = getFromStorage("tasks");
-        
+      if (input.value) {        
         if (storageData.some(e => e.header === input.value)) { //задача с таким заголовком уже существует
           document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
           showAlert("Task with this header already exists");
-          addCardActivator(user); //перезагружаем функцию: без этого почему-то перестает работать кнопка add
+          backlogActivator(user); //перезагружаем функцию: без этого почему-то перестает работать кнопка add
+          readyActivator();
         } else {
           Task.save(newTask);
 
           storageData = getFromStorage("tasks"); //надо переписать с новой таской
           let i = storageData.length - 1;
 
-          renderTask('backlog', user, "", storageData[i].header);
+          renderTask(storageData[i].id);
           disabledActivator();
           tasksSum(); //пересчет активных тасков
         }
       }
     }
   })
+}
 
-  //клик по кнопке addCard в колонке ready
-  addReadyBtn.addEventListener('click', function (event) {
+//клик по кнопке addCard в колонке ready
+const readyActivator = function () {
+  let addBtn = document.querySelector('#app-ready');
+  let submitNode = document.querySelector('#app-ready-submit');
+
+  addBtn.addEventListener('click', function (event) {
     event.stopImmediatePropagation(); //исправляем баг с двойным кликом из-за вложенности элементов (StackOverflow)
     event.preventDefault();
-    let submitNode = document.querySelector('#app-ready-submit');
 
     elementToggle("#app-ready");
     elementToggle("#app-ready-submit");
     elementToggle("#app-select-box");
 
     //заполним выпадающий список тасками из колонки backlog
-    let storageData = getFromStorage("tasks");
     storageData = storageData.filter(e => e.step === 'backlog');
     let listInputs = document.querySelector('#app-list-inputs');
     let listLabels = document.querySelector('#app-list-labels');
@@ -152,36 +153,49 @@ const addCardActivator = function (user) {
       </li>`;
       listLabels.insertAdjacentHTML('beforeend', listLabel);
     };
-    
+
     //клик по кнопке Submit
     submitNode.addEventListener('click', function (event) {
       event.preventDefault();
+      event.stopImmediatePropagation();
       let header = "";
 
       //определяем, какая опция выбрана, т.е. где display присвоен block      
       for (let i = 0; i < storageData.length; i++) {
-        console.log(i);
         if (document.querySelector('#p' + `${i+1}`) === null) return; //убираем баг "parameter is not of type 'Element'""
         var option = document.querySelector('#p' + `${i+1}`);
         var pseudo = window.getComputedStyle(option, 'select-box__input-text');
         pseudo.getPropertyValue("display") == "block" ? header = option.innerHTML : false;
       };
       if(header == "") return;
-      
-      changeStep(header, 'ready'); //перекидываем таску в колонку ready
 
-      //скрываем кнопку и инпут
-      elementToggle("#app-ready");
-      elementToggle("#app-ready-submit");
-      elementToggle("#app-select-box");  
-      
-      //очищаем выпадающий список
-      listLabels.innerHTML = "";
-      document.querySelector('#app-list-inputs').innerHTML = `
-      <div class="select-box__value">
-        <input class="select-box__input" type="radio" id="0" name="ready" checked="checked">
-        <p class="select-box__input-text">&nbsp;</p>
-      </div>`;     
+      changeStep(header, 'ready'); //перекидываем таску в колонку ready
+      clearSelectNodes();
     })
   })
+
+  //подфункция очистки выпадающего списка и тоггл
+  const clearSelectNodes = function () {
+    let listLabels = document.querySelector('#app-list-labels');
+    elementToggle("#app-ready");
+    elementToggle("#app-ready-submit");
+    elementToggle("#app-select-box");
+
+    listLabels.innerHTML = "";
+    document.querySelector('#app-list-inputs').innerHTML = `
+    <div class="select-box__value">
+      <input class="select-box__input" type="radio" id="0" name="ready" checked="checked">
+      <p class="select-box__input-text">&nbsp;</p>
+    </div>`;
+  }
+
+  //возвращаем кнопку add card при клике вне колонки
+  window.addEventListener('click', function(e) {
+    if(document.querySelector('.tasks')) {
+      var boxNode = document.querySelector('.tasks').children
+      if (!boxNode[1].contains(e.target) && !submitNode.classList.contains("hidden")) {
+        clearSelectNodes();
+      }
+    }
+  });
 }

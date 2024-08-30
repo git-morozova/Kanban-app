@@ -53,7 +53,7 @@ export const generateTestUser = function (User) {
 };
 
 export const generateTestTasks = function (Task) {
-  const testTask1 = new Task('test_user','backlog', 'Login page – performance issues', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione voluptate sunt ut pariatur ex ab alias et facere repellat itaque unde atque, mollitia commodi labore? Perspiciatis iusto quis optio. Iusto!');
+  const testTask1 = new Task('test_user','backlog', 'Login page issues', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione voluptate sunt ut pariatur ex ab alias et facere repellat itaque unde atque, mollitia commodi labore? Perspiciatis iusto quis optio. Iusto!');
   const testTask2 = new Task('test_user','backlog', 'Sprint bugfix', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione voluptate sunt ut pariatur ex ab alias et facere repellat itaque unde atque, mollitia commodi labore? Perspiciatis iusto quis optio. Iusto!');
   const testTask7 = new Task('test_user','backlog', 'Shop bug1', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione voluptate sunt ut pariatur ex ab alias et facere repellat itaque unde atque, mollitia commodi labore? Perspiciatis iusto quis optio. Iusto!');
   const testTask8 = new Task('test_user','backlog', 'Shop bug2', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione voluptate sunt ut pariatur ex ab alias et facere repellat itaque unde atque, mollitia commodi labore? Perspiciatis iusto quis optio. Iusto!');
