@@ -2,6 +2,7 @@ import { getFromStorage, changeStorage } from "../utils";
 import { Task } from "../models/Task";
 import { disabledActivator, tasksSum, showAlert, elementToggle } from "../services/render";
 import alertTemplate from "../templates/alert.html";
+import editTaskTemplate from "../templates/editTask.html";
 
 let storageData = getFromStorage("tasks");
 
@@ -14,7 +15,7 @@ const renderTask = function (id) {
   a.textContent = task.header;
 
   let div = document.createElement('div');
-  div.className = "tasks-col__item";
+  div.className = "tasks-col__item app-task";
   div.id = 'id-' + `${id}`;
 
   let node = document.querySelector('#app-' + `${task.step}` + '-items');
@@ -54,11 +55,10 @@ const deleteTask = function (id) {
 //рендер всех тасков (4 колонки)
 //заполняем колонки снизу вверх, чтобы сохранить порядок: сверху старые таски
 export const showUserTasks = function (user) {
-  storageData = getFromStorage("tasks"); //обновим, иначе вывалится storage предыдущей сессии
+  storageData = getFromStorage("tasks");
 
   const renderTasks = (currentStep) => {
     document.querySelector('#app-' + `${currentStep}` + '-items').innerHTML = ''; //очистка доски
-
     for (let i = 0; i < storageData.length; i++) {
       if (storageData[i].step == currentStep) {
         renderTask(storageData[i].id);
@@ -72,7 +72,7 @@ export const showUserTasks = function (user) {
 
   //добавляем функции кнопок только после того, как они появятся в DOM
   backlogActivator(user);
-  readyActivator();
+  addInputsActivator();
   disabledActivator();
 }
 
@@ -104,8 +104,8 @@ const backlogActivator = function (user) {
         if (storageData.some(e => e.header === input.value)) { //задача с таким заголовком уже существует
           document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
           showAlert("Task with this header already exists");
-          backlogActivator(user); //перезагружаем функцию: без этого почему-то перестает работать кнопка add
-          readyActivator();
+          backlogActivator(user); //перезагружаем функции: без этого почему-то перестает работать кнопка add
+          addInputsActivator();
         } else {
           Task.save(newTask);
 
@@ -121,35 +121,50 @@ const backlogActivator = function (user) {
   })
 }
 
-//клик по кнопке addCard в колонке ready
-const readyActivator = function () {
-  let addBtn = document.querySelector('#app-ready');
-  let submitNode = document.querySelector('#app-ready-submit');
+//активируем функции для кнопок add Card в колонках ready, inprogress и finished
+const addInputsActivator = function () {
+  columnActivator("ready");
+  columnActivator("inprogress");
+  columnActivator("finished");
+}
+
+//клик по кнопке addCard в колонках ready, inprogress и finished
+const columnActivator = function (column) {
+  let addBtn = document.querySelector('#app-' + `${column}`);
+  let submitNode = document.querySelector('#app-' + `${column}` + '-submit');
 
   addBtn.addEventListener('click', function (event) {
     event.stopImmediatePropagation(); //исправляем баг с двойным кликом из-за вложенности элементов (StackOverflow)
     event.preventDefault();
 
-    elementToggle("#app-ready");
-    elementToggle("#app-ready-submit");
-    elementToggle("#app-select-box");
+    elementToggle("#app-" + `${column}`);
+    elementToggle("#app-" + `${column}` + "-submit");
+    elementToggle("#app-select-" + `${column}`);
 
-    //заполним выпадающий список тасками из колонки backlog
-    storageData = storageData.filter(e => e.step === 'backlog');
-    let listInputs = document.querySelector('#app-list-inputs');
-    let listLabels = document.querySelector('#app-list-labels');
+    //заполним выпадающий список тасками из левой колонки
+    let leftColumnName = "";
+    column == "ready" ? leftColumnName = "backlog" : "";
+    column == "inprogress" ? leftColumnName = "ready" : "";
+    column == "finished" ? leftColumnName = "inprogress" : "";
+
+    storageData = getFromStorage("tasks"); //обновим
+
+    storageData = storageData.filter(e => e.step === leftColumnName);
+    let listInputs = document.querySelector('#app-inputs-' + `${column}`);
+    let listLabels = document.querySelector('#app-labels-' + `${column}`);
 
     for (let i = 0; i < storageData.length; i++) {
+      let id = `${column}` + "-option-" + `${i+1}`;
       let listInput = `
       <div class="select-box__value">
-        <input class="select-box__input" type="radio" id="${i+1}" name="ready">
-        <p class="select-box__input-text" id="p${i+1}">${storageData[i].header}</p>
+        <input class="select-box__input" type="radio" id="${id}" name="${column}">
+        <p class="select-box__input-text" id="p-${column}${i+1}">${storageData[i].header}</p>
       </div>`;
       listInputs.insertAdjacentHTML('beforeend', listInput);
 
       let listLabel = `
       <li>
-        <label class="select-box__option" for="${i+1}" aria-hidden="aria-hidden">${storageData[i].header}</label>
+        <label class="select-box__option" for="${id}" aria-hidden="aria-hidden">${storageData[i].header}</label>
       </li>`;
       listLabels.insertAdjacentHTML('beforeend', listLabel);
     };
@@ -162,40 +177,59 @@ const readyActivator = function () {
 
       //определяем, какая опция выбрана, т.е. где display присвоен block      
       for (let i = 0; i < storageData.length; i++) {
-        if (document.querySelector('#p' + `${i+1}`) === null) return; //убираем баг "parameter is not of type 'Element'""
-        var option = document.querySelector('#p' + `${i+1}`);
+        if (document.querySelector('#p-' + `${column}${i+1}`) === null) return; //убираем баг "parameter is not of type 'Element'""
+        var option = document.querySelector('#p-' + `${column}${i+1}`);
         var pseudo = window.getComputedStyle(option, 'select-box__input-text');
         pseudo.getPropertyValue("display") == "block" ? header = option.innerHTML : false;
       };
       if(header == "") return;
 
-      changeStep(header, 'ready'); //перекидываем таску в колонку ready
-      clearSelectNodes();
+      changeStep(header, column); //перекидываем таску из левой колонки в правую
+      clearSelectNodes();     
     })
   })
 
   //подфункция очистки выпадающего списка и тоггл
   const clearSelectNodes = function () {
-    let listLabels = document.querySelector('#app-list-labels');
-    elementToggle("#app-ready");
-    elementToggle("#app-ready-submit");
-    elementToggle("#app-select-box");
+    let listLabels = document.querySelector('#app-labels-' + `${column}`);
+    elementToggle("#app-" + `${column}`);
+    elementToggle("#app-" + `${column}` + "-submit");
+    elementToggle("#app-select-" + `${column}`);
 
     listLabels.innerHTML = "";
-    document.querySelector('#app-list-inputs').innerHTML = `
+    let id = `${column}` + "-option-0";
+    document.querySelector('#app-inputs-' + `${column}`).innerHTML = `
     <div class="select-box__value">
-      <input class="select-box__input" type="radio" id="0" name="ready" checked="checked">
-      <p class="select-box__input-text">&nbsp;</p>
-    </div>`;
+        <input class="select-box__input" type="radio" id="${id}" name="${column}" checked="checked">
+        <p class="select-box__input-text">&nbsp;</p>
+      </div>`;
   }
 
   //возвращаем кнопку add card при клике вне колонки
   window.addEventListener('click', function(e) {
-    if(document.querySelector('.tasks')) {
-      var boxNode = document.querySelector('.tasks').children
-      if (!boxNode[1].contains(e.target) && !submitNode.classList.contains("hidden")) {
-        clearSelectNodes();
-      }
+    var boxNode = document.querySelector('.tasks').children;
+    if(document.querySelector('.tasks') && !submitNode.classList.contains("hidden")) {      
+      var i = "";
+      column == "ready" ? i = 1 : "";
+      column == "inprogress" ? i = 2 : "";
+      column == "finished" ? i = 3 : "";
+
+      !boxNode[i].contains(e.target) ? clearSelectNodes() : false
     }
   });
+
+  //редактирование таска
+  const allTasks = document.querySelectorAll('.app-task');
+
+  allTasks.forEach(task => { //вешаем обработчик на каждый div с таском
+    task.addEventListener('click', function editTask(event) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      let id = task.getAttribute('id');
+      document.querySelector("#content").innerHTML = editTaskTemplate; //шаблон редактирования таски
+      editTask(id);
+    });
+  });
+  
 }

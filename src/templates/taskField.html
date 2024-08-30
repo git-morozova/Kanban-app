@@ -23,15 +23,15 @@
                 <div class="tasks-col__add_plus">+</div> 
                 <div class="tasks-col__add_text">Add card</div>
             </button>            
-            <div id="app-select-box" class="select-box hidden">
+            <div id="app-select-ready" class="select-box hidden">
                 <img class="select-box__icon" src="../images/arrow.svg" aria-hidden="true">
-                <div id="app-list-inputs" class="select-box__current" tabindex="1">        
+                <div id="app-inputs-ready" class="select-box__current" tabindex="1">        
                     <div class="select-box__value">
-                        <input class="select-box__input" type="radio" id="0" name="ready" checked="checked">
+                        <input class="select-box__input" type="radio" id="ready-option-0" name="ready" checked="checked">
                         <p class="select-box__input-text">&nbsp;</p>
                     </div>       
                 </div>
-                <ul id="app-list-labels" class="select-box__list shadow">  
+                <ul id="app-labels-ready" class="select-box__list shadow">  
                 </ul>
             </div>                 
         <button id="app-ready-submit" class="btn btn-primary hidden">Submit</button>
@@ -42,20 +42,48 @@
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">In progress</div>
         <div id="app-inprogress-items" class="items"></div>
-        <button id="app-inprogress" class="tasks-col__add d-flex">
+        <div class="buttons">
+            <button id="app-inprogress" class="tasks-col__add d-flex">
                 <div class="tasks-col__add_plus">+</div> 
                 <div class="tasks-col__add_text">Add card</div>
-        </button>
+            </button>            
+            <div id="app-select-inprogress" class="select-box hidden">
+                <img class="select-box__icon" src="../images/arrow.svg" aria-hidden="true">
+                <div id="app-inputs-inprogress" class="select-box__current" tabindex="1">        
+                    <div class="select-box__value">
+                        <input class="select-box__input" type="radio" id="inprogress-option-0" name="inprogress" checked="checked">
+                        <p class="select-box__input-text" id="p-inprogress0">&nbsp;</p>
+                    </div>       
+                </div>
+                <ul id="app-labels-inprogress" class="select-box__list shadow">  
+                </ul>
+            </div>                 
+        <button id="app-inprogress-submit" class="btn btn-primary hidden">Submit</button>
+        </div> 
     </div>
 
     <!-- Finished -->
     <div class="col tasks-col d-flex flex-column gap-2 pt-2 pb-2 h-100">
         <div class="tasks-col__title">Finished</div>
         <div id="app-finished-items" class="items"></div>
-        <button id="app-finished" class="tasks-col__add d-flex">
+        <div class="buttons">
+            <button id="app-finished" class="tasks-col__add d-flex">
                 <div class="tasks-col__add_plus">+</div> 
                 <div class="tasks-col__add_text">Add card</div>
-        </button>
+            </button>            
+            <div id="app-select-finished" class="select-box hidden">
+                <img class="select-box__icon" src="../images/arrow.svg" aria-hidden="true">
+                <div id="app-inputs-finished" class="select-box__current" tabindex="1">        
+                    <div class="select-box__value">
+                        <input class="select-box__input" type="radio" id="finished-option-0" name="finished" checked="checked">
+                        <p class="select-box__input-text">&nbsp;</p>
+                    </div>       
+                </div>
+                <ul id="app-labels-finished" class="select-box__list shadow">  
+                </ul>
+            </div>                 
+        <button id="app-finished-submit" class="btn btn-primary hidden">Submit</button>
+        </div> 
     </div>
     
 </div>    
