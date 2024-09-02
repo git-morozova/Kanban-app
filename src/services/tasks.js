@@ -1,10 +1,11 @@
 import { getFromStorage, changeStorage } from "../utils";
 import { Task } from "../models/Task";
-import { disabledActivator, tasksSum, showAlert, elementToggle } from "../services/render";
+import { disabledActivator, tasksSum, showAlert, elementToggle, changeTemplate } from "../services/render";
 import alertTemplate from "../templates/alert.html";
-import editTaskTemplate from "../templates/editTask.html";
+import taskFieldTemplate from "../templates/taskField.html";
 
 let storageData = getFromStorage("tasks");
+let allTasksArr = [] //для функции редактирования каждой таски, будем туда динамически добавлять ноды с тасками
 
 //вспомогательная функция - рендер одного таска
 const renderTask = function (id) {
@@ -44,7 +45,8 @@ const changeStep = function (header, step) {
   renderTask(tempTask.id);
   disabledActivator();
   tasksSum();
-}
+  allTasksArr = updTaskNodes(); //обновим
+};
 
 //вспомогательная функция - убрать из DOM один таск
 const deleteTask = function (id) {
@@ -74,6 +76,8 @@ export const showUserTasks = function (user) {
   backlogActivator(user);
   addInputsActivator();
   disabledActivator();
+  
+  allTasksArr = updTaskNodes(); //обновим    
 }
 
 //клик по кнопке addCard в колонке backlog
@@ -114,9 +118,10 @@ const backlogActivator = function (user) {
 
           renderTask(storageData[i].id);
           disabledActivator();
-          tasksSum(); //пересчет активных тасков
+          tasksSum(); //пересчет активных тасков   
+          allTasksArr = updTaskNodes(); //обновим  
         }
-      }
+      }      
     }
   })
 }
@@ -185,7 +190,9 @@ const columnActivator = function (column) {
       if(header == "") return;
 
       changeStep(header, column); //перекидываем таску из левой колонки в правую
-      clearSelectNodes();     
+      clearSelectNodes();
+ 
+      allTasksArr = updTaskNodes(); //обновим    
     })
   })
 
@@ -207,29 +214,117 @@ const columnActivator = function (column) {
 
   //возвращаем кнопку add card при клике вне колонки
   window.addEventListener('click', function(e) {
-    var boxNode = document.querySelector('.tasks').children;
-    if(document.querySelector('.tasks') && !submitNode.classList.contains("hidden")) {      
-      var i = "";
-      column == "ready" ? i = 1 : "";
-      column == "inprogress" ? i = 2 : "";
-      column == "finished" ? i = 3 : "";
+    var tasksContainer = document.querySelector('.tasks');
+    if (tasksContainer) {
+      var boxNode = tasksContainer.children;
+      if (!submitNode.classList.contains("hidden")) {      
+        var i = "";
+        column == "ready" ? i = 1 : "";
+        column == "inprogress" ? i = 2 : "";
+        column == "finished" ? i = 3 : "";
 
-      !boxNode[i].contains(e.target) ? clearSelectNodes() : false
+        !boxNode[i].contains(e.target) ? clearSelectNodes() : false
+      }
     }
   });
+}
 
-  //редактирование таска
-  const allTasks = document.querySelectorAll('.app-task');
+//функция обновляет nodeList с тасками
+const updTaskNodes = function () {
+  let allTasksCollection = document.getElementsByClassName('app-task');
+  allTasksArr = Array.from(allTasksCollection); //надо преобразовать в массив, чтобы сработал forEach
 
-  allTasks.forEach(task => { //вешаем обработчик на каждый div с таском
+  //addEventListener для редактирования таска
+  allTasksArr.forEach(task => { //вешаем обработчик на каждый div с таском
     task.addEventListener('click', function editTask(event) {
       event.preventDefault();
       event.stopImmediatePropagation();
 
-      let id = task.getAttribute('id');
-      document.querySelector("#content").innerHTML = editTaskTemplate; //шаблон редактирования таски
-      editTask(id);
-    });
-  });
-  
+      let id = task.getAttribute('id').replace("id-", '');
+
+      changeTemplate("editTask"); //меняем шаблон
+      let headerNode = document.querySelector("#app-task-header");
+      let textNode = document.querySelector("#app-task-text");
+
+      //маневры внутри страницы редактирования таски
+      let taskStorage = getFromStorage("tasks").filter(e => e.id === id)[0];
+      headerNode.innerHTML = taskStorage.header;
+      textNode.innerHTML = taskStorage.text;
+
+      //инпут для header
+      headerNode.addEventListener('click', function (event) {
+        event.preventDefault();
+        let newTag = document.createElement('input');
+
+        newTag.setAttribute('type', 'text');
+        if (headerNode.innerHTML == taskStorage.header) {
+          newTag.setAttribute('value', taskStorage.header);
+        } else {
+          newTag.setAttribute('value', headerNode.innerHTML);
+        }
+        newTag.setAttribute('id', 'app-header-input');
+        headerNode.innerHTML = '';
+        headerNode.insertAdjacentElement('afterend', newTag);
+        newTag.focus();
+
+        //клик вне инпута - возвращает h2
+        newTag.onblur = function (event) {
+          event.preventDefault();    
+          if (newTag.value) { 
+            headerNode.blur()
+            headerNode.innerHTML = document.querySelector("#app-header-input").value;
+            newTag.parentNode.removeChild(newTag);
+          }
+        }
+      })
+
+      //инпут для text
+      textNode.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        let newTag = document.createElement('textarea');
+        newTag.setAttribute('id', 'app-text-input');
+        
+        newTag.setAttribute('value', taskStorage.text);
+        if (textNode.innerHTML == taskStorage.text) {
+          newTag.innerHTML = taskStorage.text;
+        } else {
+          newTag.innerHTML = textNode.innerHTML;
+        }
+
+        textNode.innerHTML = '';
+        textNode.insertAdjacentElement('afterend', newTag);
+        newTag.focus();
+
+        //клик вне инпута - возвращает p
+        newTag.onblur = function (event) {
+          event.preventDefault();    
+          textNode.blur()
+          textNode.innerHTML = document.querySelector("#app-text-input").value;
+          newTag.parentNode.removeChild(newTag);
+        }
+      })      
+
+      //клик по кнопке Submit
+      document.querySelector('#app-task-submit').addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+     
+        taskStorage.header = headerNode.innerHTML;   
+        changeStorage (taskStorage, "tasks");
+    
+        taskStorage.text = textNode.innerHTML;   
+        changeStorage (taskStorage, "tasks");
+      })
+
+      //клик по кнопке "закрыть"
+      document.querySelector('#app-close-btn').addEventListener('click', function (event) {
+        event.preventDefault();
+        console.log(event)
+        document.querySelector("#content").innerHTML = taskFieldTemplate; //шаблон основного блока: задачи  
+        changeStorage("taskField", "currentPage"); //запишем в local storage текущую страницу
+        showUserTasks(getFromStorage("currentUser")); //рендер всех тасков юзера на доске
+      })
+    })
+  })
 }

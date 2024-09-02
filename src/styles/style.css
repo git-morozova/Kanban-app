@@ -3,6 +3,15 @@
   font-size: 18px;    
 }
 
+.app-task {
+  border-radius:10px; 
+}
+
+.task__title, .task__text {
+  display: block; 
+  width: 60%; 
+}
+
 /* select */
 .select-box {
   position: relative;
@@ -386,6 +395,9 @@ background-color: #deeef7 !important;
 
 /*адаптив*/
 @media (min-width: 681px) and (max-width: 1000px) {
+  .task__title, .task__text { 
+    width: 100%; 
+  }
   .footer-dev-info {
     display: none !important;
   }
@@ -416,6 +428,9 @@ background-color: #deeef7 !important;
 }
 
 @media (max-width: 680px) {
+  .task__title, .task__text { 
+    width: 100%; 
+  }
   .navbar-brand, #app-userName,  #app-footer, .footer-dev-info {
     display: none !important;
   }

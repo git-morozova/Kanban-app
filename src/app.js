@@ -7,7 +7,7 @@ import alertTemplate from "./templates/alert.html";
 
 import { User } from "./models/User";
 import { Task } from "./models/Task";
-import { generateTestUser, generateTestTasks, addToStorage } from "./utils";
+import { generateTestUser, generateTestTasks, addToStorage, changeStorage } from "./utils";
 import { State } from "./state";
 import { authUser, checkStorageAuth } from "./services/auth";
 import { toggleAuthBlock, toggleFooter, navArrowShow, navArrowHide, showAlert, hideAlert, tasksSum } from "./services/render";
@@ -21,17 +21,18 @@ let mainContent = document.querySelector("#content");
 if(checkStorageAuth() == true){
   toggleAuthBlock(appState.currentUser); //меняем контент в шапке
   toggleFooter(); //меняем контент в подвале
-  mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока: задачи
+  mainContent.innerHTML = taskFieldTemplate; //шаблон основного блока: задачи  
+  changeStorage("taskField", "currentPage"); //запишем в local storage текущую страницу
   showUserTasks(appState.currentUser); //рендер всех тасков юзера на доске
   tasksSum(); //пишем в футер кол-во тасков
 } else {
   mainContent.innerHTML = pleaseSignInTemplate; //шаблон основного блока: пожалуйста, залогиньтесь
+  changeStorage("pleaseSignIn", "currentPage"); //запишем в local storage текущую страницу
 }
 
 //обработчик кнопки "Sign in"
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  localStorage.clear();
   generateTestUser(User);
   generateTestTasks(Task);
 
@@ -42,6 +43,7 @@ loginForm.addEventListener("submit", function (e) {
   //проверка логина и пароля
   if(authUser(login, password)) {
     addToStorage(login, "currentUser"); //запишем в local storage текущего пользователя
+    changeStorage("taskField", "currentPage"); //запишем в local storage текущую страницу
     toggleAuthBlock(login); //меняем контент в шапке
     toggleFooter(); //меняем контент в подвале
     console.log("Вход пользователя " + login + ' по Sign in');
@@ -53,6 +55,8 @@ loginForm.addEventListener("submit", function (e) {
     mainContent.innerHTML += alertTemplate; //шаблон алерта
     showAlert("Sorry, you've no access to this resource!");
     console.log("Неверный логин/пароль");
+    localStorage.clear();
+    changeStorage("pleaseSignIn", "currentPage"); //запишем в local storage текущую страницу
   }
 });
 
@@ -64,7 +68,8 @@ logOutButton.addEventListener('click', function (event) {
   toggleAuthBlock(); //меняем контент в шапке
   toggleFooter(); //меняем контент в подвале
   localStorage.clear();
-  mainContent.innerHTML = pleaseSignInTemplate; //шаблон основного блока: пожалуйста, залогиньтесь  
+  mainContent.innerHTML = pleaseSignInTemplate; //шаблон основного блока: пожалуйста, залогиньтесь
+  changeStorage("pleaseSignIn", "currentPage"); //запишем в local storage текущую страницу
 })
 
 //обработчик верхнего выпадающего меню

@@ -1,9 +1,31 @@
 import { DEVNAME, DEVYEAR } from "../globals";
-import { getFromStorage } from "../utils";
+import { getFromStorage, changeStorage } from "../utils";
+import editTaskTemplate from "../templates/pages/editTask.html";
+import editUsersTemplate from "../templates/pages/editUsers.html";
+import profileTemplate from "../templates/pages/profile.html";
+import pleaseSignInTemplate from "../templates/pleaseSignIn.html";
+import taskFieldTemplate from "../templates/taskField.html";
 
 //запись констант в футер
 document.querySelector('#app-devName').innerHTML = DEVNAME;
 document.querySelector('#app-devYear').innerHTML = DEVYEAR;
+
+//навигация по страницам
+//шаблоны taskFieldTemplate и пр. - капризные, написать функцию покороче не вышло. И в app.js оно не работает
+export const changeTemplate = function (newPage) {
+  changeStorage (newPage, "currentPage");
+  if (newPage = "editTask") {
+    document.querySelector("#content").innerHTML = editTaskTemplate
+  } else if (newPage = "editUsers") {
+    document.querySelector("#content").innerHTML = editUsersTemplate
+  } else if (newPage = "profile") {
+    document.querySelector("#content").innerHTML = profileTemplate
+  } else if (newPage = "pleaseSignIn") {
+    document.querySelector("#content").innerHTML = pleaseSignInTemplate
+  } else if (newPage = "taskField") {
+    document.querySelector("#content").innerHTML = taskFieldTemplate
+  }
+};
 
 //меняет класс элемента с hidden на visible и обратно
 export const elementToggle = function (selector) {
