@@ -29,3 +29,6 @@ Kanban-доска с возможностью добавлять, удалять
 ### Как запустить productive версию
 - скачать папку public
 - открыть index.html в браузере
+
+### Как запустить в Github Pages
+- https://git-morozova.github.io/Kanban-app/public/
