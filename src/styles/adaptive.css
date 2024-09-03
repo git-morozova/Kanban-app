@@ -1,0 +1,86 @@
+@media (min-width: 681px) and (max-width: 1000px) {
+  .ms-auto {
+    margin-left: inherit !important;
+  }
+
+  .navbar {
+    min-height: 130px;
+    justify-content: space-evenly;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+  }
+
+  footer {
+    flex-flow: column;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  .footer-dev-info {
+    display: none !important;
+  }
+
+  .navbar-expand-lg {
+    flex-flow: column;
+  }
+
+  .tasks {
+    flex-direction: column;
+  }
+
+  .task__title,
+  .task__text {
+    width: 100%;
+  }
+
+  .p-3 {
+    padding: 0.2rem 2rem !important;
+  }
+
+  .select-box,
+  .profile__input,
+  .users__input {
+    max-width: none;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .select-box,
+  .profile__input,
+  .users__input {
+    max-width: none;
+    margin: 0 auto;
+  }
+
+  .task__title,
+  .task__text {
+    width: 100%;
+  }
+
+  .navbar-brand,
+  #app-userName,
+  #app-footer,
+  .footer-dev-info {
+    display: none !important;
+  }
+
+  .navbar {
+    background-color: #0079bf !important;
+  }
+
+  .dropdown-toggle {
+    text-align: right;
+  }
+
+  .tasks {
+    flex-direction: column;
+  }
+
+  #sign-in {
+    flex-direction: column;
+    text-align: center;
+  }
+}

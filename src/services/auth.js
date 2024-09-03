@@ -24,4 +24,4 @@ export const checkStorageAuth = function () {
     console.log("Нет входа");
     return false;
   }
-}
+};
