@@ -20,7 +20,9 @@ export const profileActivator = function () {
     if(passInputNode.value){
       userStorage.password = passInputNode.value;       
       changeStorage (userStorage, "users");
-      closeWindow(event);
+      document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
+      showAlert("Success!")
+      profileActivator(); //перезагружаем
     } else {
       document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
       showAlert("Password is empty!")

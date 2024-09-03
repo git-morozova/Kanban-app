@@ -80,4 +80,4 @@ export const generateTestTasks = function (Task) {
   Task.save(testTask4);
   Task.save(testTask5);
   Task.save(testTask6);
-}; 
+};

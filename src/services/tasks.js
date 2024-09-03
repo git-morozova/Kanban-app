@@ -325,7 +325,7 @@ const updTaskNodes = function () {
         changeStorage (taskStorage, "tasks");    
         taskStorage.text = textNode.innerHTML;   
         changeStorage (taskStorage, "tasks");
-        
+
         closeWindow(event);
       })
 
@@ -335,6 +335,7 @@ const updTaskNodes = function () {
         event.stopImmediatePropagation();
 
         deleteItemFromStorage(taskStorage, "tasks");
+        tasksSum(); //пересчет активных тасков 
         closeWindow(event);
       })
 
