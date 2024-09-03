@@ -15,6 +15,7 @@ export const usersActivator = function () {
     .addEventListener("click", function (event) {
       event.preventDefault();
       event.stopImmediatePropagation();
+      usersStorage = getFromStorage("users"); //перезагружаем
       clearSelectNodes();
       let newLogin = addInputNode.value;
 
