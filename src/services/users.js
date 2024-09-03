@@ -4,9 +4,8 @@ import { User } from "../models/User";
 import { showAlert } from "../services/render";
 import alertTemplate from "../templates/alert.html";
 
-let usersStorage = getFromStorage("users");
-
 export const usersActivator = function () {
+  let usersStorage = getFromStorage("users");
   let addInputNode = document.querySelector("#app-users-add");
 
   //клик по кнопке add

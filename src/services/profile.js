@@ -3,10 +3,10 @@ import { closeWindow } from "../app";
 import { showAlert } from "../services/render";
 import alertTemplate from "../templates/alert.html";
 
-let login = getFromStorage("currentUser");
-let userStorage = getFromStorage("users").filter((e) => e.login == login)[0];
-
 export const profileActivator = function () {
+  let login = getFromStorage("currentUser")[0];
+  let userStorage = getFromStorage("users").filter((e) => e.login === login)[0];
+
   let loginNode = document.querySelector("#app-profile-login");
   let passInputNode = document.querySelector("#app-profile-pass");
   loginNode.innerHTML = userStorage.login;
