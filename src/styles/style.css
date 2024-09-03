@@ -381,6 +381,7 @@ h1 {
 .nav-arrow-box {
  width: 10px;
  display: inline-block;
+ padding-top: 5px;
 }
 
 .arrow-dwn {

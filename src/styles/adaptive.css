@@ -31,12 +31,16 @@
   }
 
   .task__title,
-  .task__text {
+  .task__text, .btn  {
     width: 100%;
   }
 
   .p-3 {
     padding: 0.2rem 2rem !important;
+  }
+
+  .btn-submit, .btn-delete, .btn  {
+    max-width: none !important;
   }
 
   .select-box,
@@ -55,9 +59,13 @@
     margin: 0 auto;
   }
 
+  .btn-submit, .btn-delete, .btn {
+    max-width: none !important;
+  }
+
   .task__title,
-  .task__text {
-    width: 100%;
+  .task__text, .btn  {
+    width: 100% !important;
   }
 
   .navbar-brand,
