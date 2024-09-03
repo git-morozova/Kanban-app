@@ -99,7 +99,7 @@ const backlogActivator = function (user) {
 
     //клик по кнопке Submit или в любом месте кроме поля инпута
     input.onblur = function (event) {
-      event.preventDefault();
+      event.preventDefault();      
 
       let newTask = new Task(user, "backlog", input.value, "no description");
 
@@ -113,7 +113,7 @@ const backlogActivator = function (user) {
           document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
           showAlert("Task with this header already exists");
           backlogActivator(user); //перезагружаем функции: без этого почему-то перестает работать кнопка add
-          addInputsActivator();
+          addInputsActivator();  
         } else {
           Task.save(newTask);
 
@@ -123,8 +123,8 @@ const backlogActivator = function (user) {
           renderTask(storageData[i].id);
           disabledActivator();
           tasksSum(); //пересчет активных тасков
-          allTasksArr = updTaskNodes(); //обновим
         }
+        allTasksArr = updTaskNodes(); //обновим
       }
     };
   });
