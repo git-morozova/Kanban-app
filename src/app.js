@@ -1,5 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./bootstrap.bundle.min.js"; //иначе меню не работает
 import "./styles/style.css";
 import "./styles/adaptive.css";
 
