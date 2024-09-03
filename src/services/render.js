@@ -1,31 +1,15 @@
 import { DEVNAME, DEVYEAR } from "../globals";
 import { getFromStorage, changeStorage } from "../utils";
-import editTaskTemplate from "../templates/pages/editTask.html";
+import { showUserTasks } from "../services/tasks";
+import { profileActivator } from "../services/profile";
+import { usersActivator } from "../services/users";
 import editUsersTemplate from "../templates/pages/editUsers.html";
 import profileTemplate from "../templates/pages/profile.html";
-import pleaseSignInTemplate from "../templates/pleaseSignIn.html";
 import taskFieldTemplate from "../templates/taskField.html";
 
 //запись констант в футер
 document.querySelector('#app-devName').innerHTML = DEVNAME;
 document.querySelector('#app-devYear').innerHTML = DEVYEAR;
-
-//навигация по страницам
-//шаблоны taskFieldTemplate и пр. - капризные, написать функцию покороче не вышло. И в app.js оно не работает
-export const changeTemplate = function (newPage) {
-  changeStorage (newPage, "currentPage");
-  if (newPage = "editTask") {
-    document.querySelector("#content").innerHTML = editTaskTemplate
-  } else if (newPage = "editUsers") {
-    document.querySelector("#content").innerHTML = editUsersTemplate
-  } else if (newPage = "profile") {
-    document.querySelector("#content").innerHTML = profileTemplate
-  } else if (newPage = "pleaseSignIn") {
-    document.querySelector("#content").innerHTML = pleaseSignInTemplate
-  } else if (newPage = "taskField") {
-    document.querySelector("#content").innerHTML = taskFieldTemplate
-  }
-};
 
 //меняет класс элемента с hidden на visible и обратно
 export const elementToggle = function (selector) {
@@ -105,3 +89,37 @@ export const disabledActivator = function () {
   storageData.some(e => e.step === 'ready') ? inprogress.disabled = false : false;
   storageData.some(e => e.step === 'inprogress') ? finished.disabled = false : false;  
 }
+
+//проверяем, какие пункты меню отобразить
+export const changeMenuItems = function () {
+  document.querySelector("#app-profile-btn").classList.replace('hidden', 'visible');
+  document.querySelector("#app-users-btn").classList.replace('hidden', 'visible');
+
+  if(getFromStorage("currentUser") == "admin") {
+    document.querySelector("#app-profile-btn").classList.replace('visible', 'hidden')
+  } else {
+    document.querySelector("#app-users-btn").classList.replace('visible', 'hidden')
+  }
+}
+
+//навигация по страницам
+document.querySelector("#app-tasks-btn").addEventListener('click', function (event) {
+  event.preventDefault();
+  document.querySelector("#content").innerHTML = taskFieldTemplate; //шаблон основного блока: задачи  
+  changeStorage("taskField", "currentPage");
+  showUserTasks(getFromStorage("currentUser")); //рендер всех тасков юзера на доске
+})
+
+document.querySelector("#app-profile-btn").addEventListener('click', function (event) {
+  event.preventDefault();
+  document.querySelector("#content").innerHTML = profileTemplate; //шаблон основного блока: profile  
+  changeStorage("profile", "currentPage");
+  profileActivator();
+})
+
+document.querySelector("#app-users-btn").addEventListener('click', function (event) {
+  event.preventDefault();
+  document.querySelector("#content").innerHTML = editUsersTemplate; //шаблон основного блока: editUsers  
+  changeStorage("editUsers", "currentPage");
+  usersActivator();
+})

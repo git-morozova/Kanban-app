@@ -1,7 +1,9 @@
-
-<div id="app-task" class="app-task d-flex flex-column px-4 pt-3 pb-4 h-100 bg-white mx-auto">
+<div id="app-task" class="task d-flex flex-column px-4 pt-3 pb-4 h-100 bg-white mx-auto">
     <button id="app-close-btn" type="button" class="btn-close ms-auto text-end" aria-label="Close"></button>
     <h2 id="app-task-header" class="task__title"></h2>
-    <p id="app-task-text" class="task__text"></p>        
-    <button id="app-task-submit" class="btn btn-primary">Submit</button>               
+    <p id="app-task-text" class="task__text"></p> 
+    <div class="buttons d-flex flex-row gap-2">      
+        <button id="app-task-submit" class="btn btn-primary btn-submit">Save</button>          
+        <button id="app-task-delete" class="btn btn-primary btn-delete">Delete&nbsp;task</button> 
+    </div>               
 </div>   

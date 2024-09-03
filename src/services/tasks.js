@@ -1,8 +1,10 @@
-import { getFromStorage, changeStorage } from "../utils";
+import { getFromStorage, changeStorage, deleteItemFromStorage } from "../utils";
 import { Task } from "../models/Task";
-import { disabledActivator, tasksSum, showAlert, elementToggle, changeTemplate } from "../services/render";
+import { disabledActivator, tasksSum, showAlert, elementToggle } from "../services/render";
+import { closeWindow } from "../app";
+
 import alertTemplate from "../templates/alert.html";
-import taskFieldTemplate from "../templates/taskField.html";
+import editTaskTemplate from "../templates/pages/editTask.html";
 
 let storageData = getFromStorage("tasks");
 let allTasksArr = [] //для функции редактирования каждой таски, будем туда динамически добавлять ноды с тасками
@@ -98,7 +100,7 @@ const backlogActivator = function (user) {
     input.onblur = function (event) {
       event.preventDefault();
 
-      let newTask = new Task(user,'backlog', input.value, '');
+      let newTask = new Task(user,'backlog', input.value, 'no description');
 
       elementToggle("#app-backlog");
       elementToggle("#app-backlog-submit");      
@@ -231,7 +233,7 @@ const columnActivator = function (column) {
 
 //функция обновляет nodeList с тасками
 const updTaskNodes = function () {
-  let allTasksCollection = document.getElementsByClassName('app-task');
+  let allTasksCollection = document.getElementsByClassName('app-task'); //тут нельзя через querySelector
   allTasksArr = Array.from(allTasksCollection); //надо преобразовать в массив, чтобы сработал forEach
 
   //addEventListener для редактирования таска
@@ -242,7 +244,8 @@ const updTaskNodes = function () {
 
       let id = task.getAttribute('id').replace("id-", '');
 
-      changeTemplate("editTask"); //меняем шаблон
+      document.querySelector("#content").innerHTML = editTaskTemplate; //шаблон основного блока: editTask  
+      changeStorage("editTask", "currentPage");
       let headerNode = document.querySelector("#app-task-header");
       let textNode = document.querySelector("#app-task-text");
 
@@ -263,6 +266,7 @@ const updTaskNodes = function () {
           newTag.setAttribute('value', headerNode.innerHTML);
         }
         newTag.setAttribute('id', 'app-header-input');
+        newTag.setAttribute('class', 'header-input');
         headerNode.innerHTML = '';
         headerNode.insertAdjacentElement('afterend', newTag);
         newTag.focus();
@@ -284,10 +288,13 @@ const updTaskNodes = function () {
 
         let newTag = document.createElement('textarea');
         newTag.setAttribute('id', 'app-text-input');
-        
-        newTag.setAttribute('value', taskStorage.text);
-        if (textNode.innerHTML == taskStorage.text) {
-          newTag.innerHTML = taskStorage.text;
+        newTag.setAttribute('class', 'form-control text-input');
+
+        let text = taskStorage.text;        
+        newTag.setAttribute('value', text);
+
+        if (textNode.innerHTML == text) {
+          newTag.innerHTML = text;
         } else {
           newTag.innerHTML = textNode.innerHTML;
         }
@@ -298,32 +305,42 @@ const updTaskNodes = function () {
 
         //клик вне инпута - возвращает p
         newTag.onblur = function (event) {
-          event.preventDefault();    
+          event.preventDefault();
           textNode.blur()
-          textNode.innerHTML = document.querySelector("#app-text-input").value;
-          newTag.parentNode.removeChild(newTag);
+          if(document.querySelector("#app-text-input").value !== "") {
+            textNode.innerHTML = document.querySelector("#app-text-input").value;
+          } else {            
+            textNode.innerHTML = "no description";
+          }     
+          newTag.parentNode.removeChild(newTag);     
         }
       })      
 
-      //клик по кнопке Submit
+      //клик по кнопке Save
       document.querySelector('#app-task-submit').addEventListener('click', function (event) {
         event.preventDefault();
         event.stopImmediatePropagation();
      
         taskStorage.header = headerNode.innerHTML;   
-        changeStorage (taskStorage, "tasks");
-    
+        changeStorage (taskStorage, "tasks");    
         taskStorage.text = textNode.innerHTML;   
         changeStorage (taskStorage, "tasks");
+        
+        closeWindow(event);
+      })
+
+      //клик по кнопке Delete task
+      document.querySelector('#app-task-delete').addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        deleteItemFromStorage(taskStorage, "tasks");
+        closeWindow(event);
       })
 
       //клик по кнопке "закрыть"
       document.querySelector('#app-close-btn').addEventListener('click', function (event) {
-        event.preventDefault();
-        console.log(event)
-        document.querySelector("#content").innerHTML = taskFieldTemplate; //шаблон основного блока: задачи  
-        changeStorage("taskField", "currentPage"); //запишем в local storage текущую страницу
-        showUserTasks(getFromStorage("currentUser")); //рендер всех тасков юзера на доске
+        closeWindow(event);
       })
     })
   })

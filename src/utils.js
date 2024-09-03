@@ -25,6 +25,17 @@ export const changeStorage = function (obj, key) {
   addToStorage(obj, key);
 };
 
+export const deleteItemFromStorage = function (obj, key) {
+  let tempStorageData = getFromStorage(key); //создаем экземпляр
+  removeFromStorage(key);
+
+  for (let i = 0; i < tempStorageData.length; i++) {
+    if(tempStorageData[i].id !== obj.id){
+      addToStorage(tempStorageData[i], key);
+    }
+  };
+};
+
 //функция убирает таски из local storage, которые не относятся к текущему пользователю
 export const filterStorageTasks = function (login) {
   if (login !== "admin") {

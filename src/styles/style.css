@@ -3,7 +3,7 @@
   font-size: 18px;    
 }
 
-.app-task {
+.task, .users {
   border-radius:10px; 
 }
 
@@ -12,6 +12,28 @@
   width: 60%; 
 }
 
+.btn-submit, .btn-delete {
+  max-width: 202px !important;
+}
+
+.profile { 
+  border-radius:10px;
+  }
+
+ .profile__input, .users__input {
+  max-width:300px
+ }
+
+.header-input {
+  font-size: 2rem;
+  outline:none;
+  border:none !important;
+  margin-bottom:15px
+}
+.text-input {
+  font-size: 18px;
+  margin-bottom:15px
+}
 /* select */
 .select-box {
   position: relative;

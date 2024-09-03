@@ -1,0 +1,23 @@
+<div id="app-users" class="users d-flex flex-column px-4 pt-3 pb-4 h-100 bg-white mx-auto">
+    <button id="app-close-btn" type="button" class="btn-close ms-auto text-end" aria-label="Close"></button>
+    <h2 id="app-users-login" class="users__title pb-3">Edit users</h2>
+    <p class="users__text">New user:</p>  
+    <input id="app-users-add" class="users__input form-control" type="text" placeholder="Enter login" value="" autofocus>      
+    <button id="app-users-submit" class="btn btn-primary btn-submit">Add user</button>  
+    
+    <hr>
+
+    <p class="users__text pt-3">Delete user:</p>  
+    <div id="app-select-delete" class="select-box">
+        <img class="select-box__icon" src="../../images/arrow.svg" aria-hidden="true">
+        <div id="app-inputs-delete" class="select-box__current" tabindex="1">        
+            <div class="select-box__value">
+                <input class="select-box__input" type="radio" id="delete-option-0" name="delete" checked="checked">
+                <p class="select-box__input-text">&nbsp;</p>
+            </div>       
+        </div>
+        <ul id="app-labels-delete" class="select-box__list shadow">  
+        </ul>
+    </div>    
+    <button id="app-users-delete" class="btn btn-primary btn-delete">Delete user</button> 
+</div>   
