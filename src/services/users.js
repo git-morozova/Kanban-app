@@ -21,16 +21,16 @@ export const usersActivator = function () {
       if (newLogin == "") {
         document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
         showAlert("Login is empty!");
-        usersActivator(); //перезагружаем
       } else if (usersStorage.filter((e) => e.login == newLogin)[0]) {
         document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
         showAlert("Login already exists!");
-        usersActivator(); //перезагружаем
       } else {
         let newUser = new User(addInputNode.value, "12345");
         User.save(newUser);
-        usersActivator(); //перезагружаем
+        document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
+        showAlert("Success!");
       }
+      usersActivator(); //перезагружаем
     });
 
   //клик по input для удаления пользователя
