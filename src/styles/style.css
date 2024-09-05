@@ -44,6 +44,7 @@ footer {
 
 .buttons {
   padding-right: 12px;
+  padding-left: 12px;
   position: relative;
 }
 
@@ -136,18 +137,32 @@ h1 {
 /* task board */
 .items {
   padding-right: 12px;
+  padding-left: 12px;
   max-height: calc(100vh - 300px);
   overflow-y: auto;
+}
+
+.event {
+pointer-events: none;
 }
 
 .tasks {
   gap: 24px;
 }
 
+.highlight {
+  background-color: #deeef7 !important;
+}
+
 .tasks-col {
   background-color: #ebecf0;
   border-radius: 10px;
   padding-right: 0;
+  padding-left: 0;
+}
+
+.tasks-col__title {
+  padding-left: 12px;
 }
 
 .tasks-col__item-task {

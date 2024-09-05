@@ -21,7 +21,13 @@ const renderTask = function (id) {
   div.className = "tasks-col__item app-task";
   div.id = "id-" + `${id}`;
 
-  let node = document.querySelector("#app-" + `${task.step}` + "-items");
+  if (task.step !== "finished") {
+    div.setAttribute("draggable", "true");
+    div.ondragstart = dragstart_handler;
+    div.ondragend = dragend_handler;
+  }
+  
+  let node = document.querySelector("#app-" + `${task.step}` + "-items"); 
   node.insertAdjacentElement("beforeend", div);
   div.insertAdjacentElement("afterbegin", a);
 
@@ -58,7 +64,7 @@ const deleteTask = function (id) {
 
 //рендер всех тасков (4 колонки)
 //заполняем колонки снизу вверх, чтобы сохранить порядок: сверху старые таски
-export const showUserTasks = function (user) {
+export const showUserTasks = function () {
   storageData = getFromStorage("tasks");
 
   const renderTasks = (currentStep) => {
@@ -76,15 +82,23 @@ export const showUserTasks = function (user) {
   renderTasks("finished");
 
   //добавляем функции кнопок только после того, как они появятся в DOM
-  backlogActivator(user);
+  backlogActivator();
   addInputsActivator();
   disabledActivator();
 
   allTasksArr = updTaskNodes(); //обновим
+    
+  //для drag and drop
+  document.querySelector("#app-ready-col").ondrop = drop_handler;
+  document.querySelector("#app-ready-col").ondragover = dragover_handler;
+  document.querySelector("#app-inprogress-col").ondrop = drop_handler;
+  document.querySelector("#app-inprogress-col").ondragover = dragover_handler;
+  document.querySelector("#app-finished-col").ondrop = drop_handler;
+  document.querySelector("#app-finished-col").ondragover = dragover_handler;
 };
 
 //клик по кнопке addCard в колонке backlog
-const backlogActivator = function (user) {
+const backlogActivator = function () {
   let addBtn = document.querySelector("#app-backlog");
 
   addBtn.addEventListener("click", function (event) {
@@ -101,7 +115,7 @@ const backlogActivator = function (user) {
     input.onblur = function (event) {
       event.preventDefault();      
 
-      let newTask = new Task(user, "backlog", input.value, "no description");
+      let newTask = new Task(getFromStorage("currentUser")[0], "backlog", input.value, "no description");
 
       elementToggle("#app-backlog");
       elementToggle("#app-backlog-submit");
@@ -112,8 +126,6 @@ const backlogActivator = function (user) {
           //задача с таким заголовком уже существует
           document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
           showAlert("Task with this header already exists");
-          backlogActivator(user); //перезагружаем функции: без этого почему-то перестает работать кнопка add
-          addInputsActivator();  
         } else {
           Task.save(newTask);
 
@@ -121,20 +133,19 @@ const backlogActivator = function (user) {
           let i = storageData.length - 1;
 
           renderTask(storageData[i].id);
-          disabledActivator();
           tasksSum(); //пересчет активных тасков
-        }
-        allTasksArr = updTaskNodes(); //обновим
+        }        
+        showUserTasks(); //перезагружаем функции: без этого почему-то все ломается
       }
     };
   });
 };
 
-//активируем функции для кнопок add Card в колонках ready, inprogress и finished
+//активируем функции для кнопок add Card в колонках ready, inprogress и finished + dragAndDrop
 const addInputsActivator = function () {
   columnActivator("ready");
   columnActivator("inprogress");
-  columnActivator("finished");
+  columnActivator("finished"); 
 };
 
 //клик по кнопке addCard в колонках ready, inprogress и finished
@@ -360,5 +371,105 @@ const updTaskNodes = function () {
           closeWindow(event);
         });
     });
-  });
-};
+  });  
+};  
+
+// Drag and Drop
+function dragstart_handler(ev) {
+  ev.dataTransfer.setData("text", ev.target.id); // id выбранной таски вида id-19886118-c348-48ea-9276-ac11d9009040
+  ev.effectAllowed = "move";
+
+  let step = currentStep(ev.target.id);
+  ev.dataTransfer.setData("step", step);
+}
+
+function dragover_handler(ev) {
+  ev.preventDefault();
+  ev.stopPropagation();
+  document.querySelector("#app-ready-items").classList.remove("highlight");
+  document.querySelector("#app-inprogress-items").classList.remove("highlight");
+  document.querySelector("#app-finished-items").classList.remove("highlight");
+
+  if (ev.target.id == "app-ready-col") {document.querySelector("#app-ready-items").classList.add("highlight");}
+  if (ev.target.id == "app-inprogress-col") {document.querySelector("#app-inprogress-items").classList.add("highlight");}
+  if (ev.target.id == "app-finished-col") {document.querySelector("#app-finished-items").classList.add("highlight");}
+
+  //хак для дочерних элементов app-...-col, в которые не надо проваливаться во время event (pointer-events: none)
+  let allReadyTasks = document.querySelector('#app-ready-col').querySelectorAll('*');
+  let allInProgressTasks = document.querySelector('#app-inprogress-col').querySelectorAll('*'); 
+  let allFinishedTasks = document.querySelector('#app-finished-col').querySelectorAll('*'); 
+  let allTasks = [...allReadyTasks, ...allInProgressTasks, ...allFinishedTasks];
+  
+  for (let i = 0; i < allTasks.length; i++) {
+    allTasks[i].classList.add('event');
+  }
+}
+
+function drop_handler(ev) {
+  ev.preventDefault();
+
+  let id = ev.dataTransfer.getData("text");
+  let header = currentHeader(id);
+  let step = currentStep(id);
+
+  if (step == "backlog") {
+    if (ev.target.id == "app-ready-col") {
+      changeStep (header, "ready");
+      document.querySelector("#app-ready-items").insertAdjacentElement("beforeend", document.getElementById(id));
+    } else {      
+      document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
+      showAlert(`Task mudt be dropped into "Ready" list!`);
+    }
+  }
+  if (step == "ready") {
+    if (ev.target.id == "app-inprogress-col") {
+      changeStep (header, "inprogress");
+      document.querySelector("#app-inprogress-items").insertAdjacentElement("beforeend", document.getElementById(id));
+    } else {      
+      document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
+      showAlert(`Task mudt be dropped into "In progress" list!`);
+    }
+  }
+  if (step == "inprogress") {
+    if (ev.target.id == "app-finished-col") {
+      changeStep (header, "finished");
+      document.querySelector("#app-finished-items").insertAdjacentElement("beforeend", document.getElementById(id));
+    } else {      
+      document.querySelector("#content").innerHTML += alertTemplate; //шаблон алерта
+      showAlert(`Task mudt be dropped into "Finished" list!`);
+    }
+  }
+  showUserTasks(); //перезагружаем функции: без этого почему-то все ломается
+}
+
+function dragend_handler(ev) {
+  // все "вертаем взад"
+  document.querySelector("#app-ready-items").classList.remove("highlight");
+  document.querySelector("#app-inprogress-items").classList.remove("highlight");
+  document.querySelector("#app-finished-items").classList.remove("highlight");
+
+  let allReadyTasks = document.querySelector('#app-ready-col').querySelectorAll('*');
+  let allInProgressTasks = document.querySelector('#app-inprogress-col').querySelectorAll('*'); 
+  let allFinishedTasks = document.querySelector('#app-finished-col').querySelectorAll('*'); 
+  let allTasks = [...allReadyTasks, ...allInProgressTasks, ...allFinishedTasks];
+  
+  for (let i = 0; i < allTasks.length; i++) {
+    allTasks[i].classList.remove('event');
+  }
+}
+
+//вспомогательные функции
+function currentStep(id) {
+  let cleanId =  id.substring(3) // id вида вида 19886118-c348-48ea-9276-ac11d9009040
+  storageData = getFromStorage("tasks");
+  let step = storageData.filter((e) => e.id == cleanId)[0].step;
+  return step;
+}
+
+function currentHeader(id) {
+  let cleanId =  id.substring(3) // id вида вида 19886118-c348-48ea-9276-ac11d9009040
+  storageData = getFromStorage("tasks");
+  let header = storageData.filter((e) => e.id == cleanId)[0].header;
+  return header;
+}
+// END Drag and Drop

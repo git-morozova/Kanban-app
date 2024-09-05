@@ -49,6 +49,10 @@
     max-width: none;
     margin: 0 auto;
   }
+    
+  #app-alert-text {
+    width: 90%;
+  }
 }
 
 @media (max-width: 680px) {
@@ -90,5 +94,9 @@
   #sign-in {
     flex-direction: column;
     text-align: center;
+  }
+  
+  #app-alert-text {
+    width: 90%;
   }
 }

@@ -44,7 +44,7 @@ export const navArrowHide = function () {
   document.querySelector("#app-nav-arrow-cloud").classList.add("hidden");
 };
 
-//Алерт при введении неверного логина/пароля, при введении уже существующего хедера для новой таски
+//Алерт
 export const showAlert = function (e) {
   document.querySelector("#app-alert-text").innerHTML = e;
 };
